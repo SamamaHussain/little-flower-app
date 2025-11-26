@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "346305292576",
+    "project_id": "little-flower-app",
+    "storage_bucket": "little-flower-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:346305292576:android:92233c49b5ad76a29f4f45",
+        "android_client_info": {
+          "package_name": "com.example.little_flower_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJYKHn6avWVQQjErYBWaEuXFu0nuTv9BA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
