@@ -659,6 +659,7 @@ class AttendanceMarkView extends StatelessWidget {
 
             return Column(
               children: [
+                SizedBox(height: 12.h),
                 _buildCustomHeader(),
                 // Header with date and stats
                 Container(
@@ -685,7 +686,7 @@ class AttendanceMarkView extends StatelessWidget {
                             style: TextStyle(
                               fontSize: 18.sp,
                               fontWeight: FontWeight.w700,
-                              color: Color(0xFF2D3748),
+                              color: AppColors.darkBlue,
                             ),
                           ),
                           Container(
@@ -694,7 +695,7 @@ class AttendanceMarkView extends StatelessWidget {
                               vertical: 8.h,
                             ),
                             decoration: BoxDecoration(
-                              color: Color(0xFF3F4072).withOpacity(0.1),
+                              color: AppColors.darkBlue.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(12.r),
                             ),
                             child: Row(
@@ -703,7 +704,7 @@ class AttendanceMarkView extends StatelessWidget {
                                 Icon(
                                   Icons.calendar_today_rounded,
                                   size: 14.w,
-                                  color: Color(0xFF3F4072),
+                                  color: AppColors.darkBlue,
                                 ),
                                 SizedBox(width: 6.w),
                                 GestureDetector(
@@ -729,7 +730,7 @@ class AttendanceMarkView extends StatelessWidget {
                                     style: TextStyle(
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.w600,
-                                      color: Color(0xFF3F4072),
+                                      color: AppColors.darkBlue,
                                     ),
                                   ),
                                 ),
@@ -1032,15 +1033,14 @@ class AttendanceMarkView extends StatelessWidget {
                             ? null
                             : () => ctrl.saveAttendance(),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF3F4072),
+                          backgroundColor: AppColors.darkBlue,
                           foregroundColor: Colors.white,
                           elevation: 0,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.r),
                           ),
-                          disabledBackgroundColor: Color(
-                            0xFF3F4072,
-                          ).withOpacity(0.5),
+                          disabledBackgroundColor: AppColors.darkBlue
+                              .withOpacity(0.5),
                         ),
                         child: ctrl.isLoading.value
                             ? Row(
@@ -1082,18 +1082,20 @@ class AttendanceMarkView extends StatelessWidget {
 
   Widget _buildCustomHeader() {
     return Padding(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Back button and title
           Row(
             children: [
-              IconButton(
-                icon: Icon(Icons.arrow_back_rounded, color: Color(0xFF2D3748)),
-                onPressed: () => Get.back(),
-                padding: EdgeInsets.zero,
-                constraints: BoxConstraints(),
+              InkWell(
+                onTap: () => Get.back(),
+                child: Icon(
+                  Icons.arrow_back_rounded,
+                  color: Color(0xFF2D3748),
+                  size: 24.w,
+                ),
               ),
               SizedBox(width: 12.w),
               Text(
@@ -1284,21 +1286,27 @@ class AttendanceMarkView extends StatelessWidget {
   }
 
   Widget _buildLoadingState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(color: AppColors.darkBlue, strokeWidth: 2),
-          SizedBox(height: 20.h),
-          Text(
-            'Loading Students',
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF2D3748),
+    return Container(
+      decoration: BoxDecoration(color: Colors.white),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(
+              color: AppColors.darkBlue,
+              strokeWidth: 2,
             ),
-          ),
-        ],
+            SizedBox(height: 20.h),
+            Text(
+              'Loading Students',
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.w600,
+                color: Color(0xFF2D3748),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1325,7 +1333,7 @@ class AttendanceMarkView extends StatelessWidget {
             child: Icon(
               Icons.people_outline_rounded,
               size: 48.w,
-              color: Color(0xFF3F4072),
+              color: AppColors.darkBlue,
             ),
           ),
           SizedBox(height: 24.h),
@@ -1354,9 +1362,9 @@ class AttendanceMarkView extends StatelessWidget {
       AppColors.green,
       AppColors.yellow,
       AppColors.lightBlue,
-      Color(0xFFFECBE2), // Announcements color
-      Color(0xFFB0F5FF), // Staff management color
-      Color(0xFF3F4072), // Primary dark blue
+      AppColors.pink, // Announcements color
+      AppColors.lightBlue, // Staff management color
+      AppColors.darkBlue, // Primary dark blue
       Color(0xFF06D6A0), // Green
     ];
 

@@ -17,6 +17,7 @@ import 'package:little_flower_app/views/staff_management_page.dart';
 import 'package:little_flower_app/views/staff_signup_page.dart';
 import 'package:little_flower_app/views/students_page.dart';
 import 'package:little_flower_app/views/timetable_home_page.dart';
+import 'package:little_flower_app/views/view_timetable_home_page.dart';
 part 'app_routes.dart';
 
 class AppPages {
@@ -26,6 +27,11 @@ class AppPages {
   static const TEST = Routes.TEST;
 
   static final routes = [
+    GetPage(
+      name: _Paths.VIEWTIMETABLE,
+      page: () => ViewTimetableHome(),
+      binding: TimetableBindings(),
+    ),
     GetPage(
       name: _Paths.TIMETABLE,
       page: () => TimetableManagement(),

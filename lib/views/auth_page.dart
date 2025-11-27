@@ -64,41 +64,44 @@ class AuthPage extends GetView<AuthController> {
     return Column(
       children: [
         // School Logo
-        Container(
-          width: 100.w,
-          height: 100.w,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.15),
-                blurRadius: 15,
-                offset: Offset(0, 5),
-                spreadRadius: 2,
-              ),
-            ],
-          ),
-          child: ClipOval(
-            child: Image.asset(
-              'lfs_logo2.jpeg',
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) {
-                return Container(
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [Color(0xFF3F4072), Color(0xFF3F4072)],
+        Hero(
+          tag: 'schoolProfile',
+          child: Container(
+            width: 100.w,
+            height: 100.w,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.15),
+                  blurRadius: 15,
+                  offset: Offset(0, 5),
+                  spreadRadius: 2,
+                ),
+              ],
+            ),
+            child: ClipOval(
+              child: Image.asset(
+                'assets/lfs_logo2.jpeg',
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [AppColors.darkBlue, AppColors.darkBlue],
+                      ),
                     ),
-                  ),
-                  child: Icon(
-                    Icons.school_rounded,
-                    color: Colors.white,
-                    size: 40.w,
-                  ),
-                );
-              },
+                    child: Icon(
+                      Icons.school_rounded,
+                      color: Colors.white,
+                      size: 40.w,
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         ),

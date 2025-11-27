@@ -122,7 +122,7 @@ class DashboardPage extends GetView<AuthController> {
     final dateStr = '${now.day} ${months[now.month - 1]}';
 
     return Container(
-      padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 0),
+      padding: EdgeInsets.fromLTRB(16.w, 8.h, 16.w, 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -227,7 +227,7 @@ class DashboardPage extends GetView<AuthController> {
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              Color(0xFF4299E1),
+                              AppColors.darkBlue,
                             ),
                           ),
                         )
@@ -242,10 +242,19 @@ class DashboardPage extends GetView<AuthController> {
                     color: Color(0xFF2D3748),
                   ),
                 ),
-                SizedBox(width: 12.w),
+                SizedBox(width: 10.w),
                 // Menu Button
                 PopupMenuButton<String>(
-                  icon: Icon(Icons.more_vert_rounded, color: Color(0xFF4A5568)),
+                  icon: Icon(
+                    Icons.more_vert_rounded,
+                    color: AppColors.darkBlue,
+                    size: 22.w,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16.r),
+                  ),
+                  elevation: 8,
+                  color: Colors.white,
                   onSelected: (value) {
                     if (value == 'logout') {
                       controller.logout();
@@ -260,45 +269,98 @@ class DashboardPage extends GetView<AuthController> {
                   itemBuilder: (context) => [
                     PopupMenuItem(
                       value: 'refresh_weather',
-                      child: Row(
-                        children: [
-                          Icon(Icons.refresh_rounded, color: Colors.blue[700]),
-                          SizedBox(width: 8.w),
-                          Text('Refresh Weather'),
-                        ],
-                      ),
-                    ),
-                    PopupMenuItem(
-                      value: 'notifications',
-                      child: Row(
-                        children: [
-                          Icon(
-                            Icons.notifications_none_rounded,
-                            color: Colors.blue[700],
-                          ),
-                          SizedBox(width: 8.w),
-                          Text('Notifications'),
-                        ],
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 4.h),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 32.w,
+                              height: 32.w,
+                              decoration: BoxDecoration(
+                                color: AppColors.darkBlue.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
+                              child: Icon(
+                                Icons.refresh_rounded,
+                                size: 16.w,
+                                color: AppColors.darkBlue,
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Text(
+                              'Refresh Weather',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF2D3748),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     PopupMenuItem(
                       value: 'profile',
-                      child: Row(
-                        children: [
-                          Icon(Icons.person_rounded, color: Colors.blue[700]),
-                          SizedBox(width: 8.w),
-                          Text('My Profile'),
-                        ],
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 4.h),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 32.w,
+                              height: 32.w,
+                              decoration: BoxDecoration(
+                                color: AppColors.darkBlue.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
+                              child: Icon(
+                                Icons.person_rounded,
+                                size: 18.w,
+                                color: AppColors.darkBlue,
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Text(
+                              'My Profile',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF2D3748),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     PopupMenuItem(
                       value: 'logout',
-                      child: Row(
-                        children: [
-                          Icon(Icons.logout_rounded, color: Colors.red),
-                          SizedBox(width: 8.w),
-                          Text('Logout'),
-                        ],
+                      child: Container(
+                        padding: EdgeInsets.symmetric(vertical: 4.h),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 32.w,
+                              height: 32.w,
+                              decoration: BoxDecoration(
+                                color: Colors.red.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8.r),
+                              ),
+                              child: Icon(
+                                Icons.logout_rounded,
+                                size: 18.w,
+                                color: Colors.red,
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Text(
+                              'Logout',
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                color: Color(0xFF2D3748),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -350,7 +412,7 @@ class DashboardPage extends GetView<AuthController> {
                         ),
                       )
                     : Image.network(
-                        'https://via.placeholder.com/150', // Replace with actual profile image URL
+                        'https://thumbs.dreamstime.com/b/profile-picture-caucasian-male-employee-posing-office-happy-young-worker-look-camera-workplace-headshot-portrait-smiling-190186649.jpg', // Replace with actual profile image URL
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
@@ -359,7 +421,10 @@ class DashboardPage extends GetView<AuthController> {
                               gradient: LinearGradient(
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
-                                colors: [Color(0xFF3F4072), Color(0xFF3F4072)],
+                                colors: [
+                                  AppColors.darkBlue,
+                                  AppColors.darkBlue,
+                                ],
                               ),
                             ),
                             child: Icon(

@@ -13,11 +13,14 @@ abstract class Routes {
   static const STAFF_MANAGEMENT = _Paths.STAFF_MANAGEMENT;
   static const ANOUNCEMENT = _Paths.ANOUNCEMENT;
   static const TIMETABLE = _Paths.TIMETABLE;
+  static const VIEWTIMETABLE = _Paths.VIEWTIMETABLE;
+  static const NAVBAR = _Paths.NAVBAR;
 }
 
 abstract class _Paths {
   _Paths._();
 
+  static const NAVBAR = '/navbar';
   static const GUEST = '/guest';
   static const TEST = '/test';
   static const AUTH = '/auth';
@@ -28,4 +31,5 @@ abstract class _Paths {
   static const STAFF_MANAGEMENT = '/staff-management';
   static const ANOUNCEMENT = '/anounce';
   static const TIMETABLE = '/time';
+  static const VIEWTIMETABLE = '/viewtime';
 }

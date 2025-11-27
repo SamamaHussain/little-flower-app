@@ -33,6 +33,9 @@ class GuestPage extends GetView<AnnouncementsController> {
                     _buildQuickPreview(),
                     SizedBox(height: 24.h),
 
+                    _buildTimetableSection(),
+                    SizedBox(height: 24.h),
+
                     // Live Announcements (same style as dashboard)
                     _buildLiveAnnouncements(),
                     SizedBox(height: 24.h),
@@ -64,15 +67,8 @@ class GuestPage extends GetView<AnnouncementsController> {
 
     // Get current date and day
     final now = DateTime.now();
-    final days = [
-      'Monday',
-      'Tuesday',
-      'Wednesday',
-      'Thursday',
-      'Friday',
-      'Saturday',
-      'Sunday',
-    ];
+    final days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
     final months = [
       'Jan',
       'Feb',
@@ -92,7 +88,7 @@ class GuestPage extends GetView<AnnouncementsController> {
     final dateStr = '${now.day} ${months[now.month - 1]}';
 
     return Container(
-      padding: EdgeInsets.fromLTRB(16.w, 16.h, 16.w, 0),
+      padding: EdgeInsets.fromLTRB(16.w, 10.h, 16.w, 0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -212,7 +208,7 @@ class GuestPage extends GetView<AnnouncementsController> {
                     color: Color(0xFF2D3748),
                   ),
                 ),
-                SizedBox(width: 12.w),
+                SizedBox(width: 16.w),
                 // Login Button (simple and clean like dashboard menu)
                 Container(
                   decoration: BoxDecoration(
@@ -255,46 +251,49 @@ class GuestPage extends GetView<AnnouncementsController> {
       child: Row(
         children: [
           // School Logo on Left with JPEG image
-          Container(
-            width: 80.w,
-            height: 80.w, // Use same value for perfect circle
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.15),
-                  blurRadius: 12,
-                  offset: Offset(0, 3),
-                  spreadRadius: 1,
-                ),
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 4,
-                  offset: Offset(0, 1),
-                ),
-              ],
-            ),
-            child: ClipOval(
-              child: Image.asset(
-                'lfs_logo2.jpeg',
-                fit: BoxFit.cover, // Ensures image fills the circle
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [Color(0xFF3F4072), Color(0xFF3F4072)],
+          Hero(
+            tag: 'schoolProfile',
+            child: Container(
+              width: 80.w,
+              height: 80.w, // Use same value for perfect circle
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.15),
+                    blurRadius: 12,
+                    offset: Offset(0, 3),
+                    spreadRadius: 1,
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 4,
+                    offset: Offset(0, 1),
+                  ),
+                ],
+              ),
+              child: ClipOval(
+                child: Image.asset(
+                  'assets/lfs_logo2.jpeg',
+                  fit: BoxFit.cover, // Ensures image fills the circle
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [AppColors.darkBlue, AppColors.darkBlue],
+                        ),
                       ),
-                    ),
-                    child: Icon(
-                      Icons.school_rounded,
-                      color: Colors.white,
-                      size: 30.w,
-                    ),
-                  );
-                },
+                      child: Icon(
+                        Icons.school_rounded,
+                        color: Colors.white,
+                        size: 30.w,
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),
@@ -415,6 +414,101 @@ class GuestPage extends GetView<AnnouncementsController> {
           ),
         ],
       ),
+    );
+  }
+
+  // Add this method inside your GuestPage class (next to other _build methods)
+
+  Widget _buildTimetableSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          'Timetables',
+          style: TextStyle(
+            fontSize: 18.sp,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF2D3748),
+          ),
+        ),
+        SizedBox(height: 16.h),
+
+        // Main Timetable Card
+        InkWell(
+          onTap: () {
+            Get.toNamed(Routes.VIEWTIMETABLE); // Change to your actual route
+          },
+          borderRadius: BorderRadius.circular(20.r),
+          child: Container(
+            width: double.infinity,
+            padding: EdgeInsets.all(20.w),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.r),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                // Left: Icon with colorful circle background
+                Container(
+                  padding: EdgeInsets.all(18),
+                  width: 72.w,
+                  height: 72.w,
+                  decoration: BoxDecoration(
+                    color: AppColors.pink,
+                    borderRadius: BorderRadius.circular(20.r),
+                  ),
+                  child: Image.asset(
+                    'assets/icons/schedule.png', // Your PNG file
+                  ),
+                ),
+
+                SizedBox(width: 20.w),
+
+                // Right: Text content
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'View Class Schedule',
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF2D3748),
+                        ),
+                      ),
+                      SizedBox(height: 6.h),
+                      Text(
+                        'Check today\'s periods, subjects & timings',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: Color(0xFF718096),
+                          height: 1.4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Right Arrow
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  color: Color(0xFF718096),
+                  size: 20.w,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 

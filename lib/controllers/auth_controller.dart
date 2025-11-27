@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:little_flower_app/routes/app_pages.dart';
 
 class AuthController extends GetxController {
   static AuthController get instance => Get.find();
@@ -77,7 +78,7 @@ class AuthController extends GetxController {
         password: password.trim(),
       );
       print('Current user is ${_auth.currentUser}');
-      Get.offAllNamed('/dashboard');
+      Get.offAllNamed(Routes.DASHBOARD);
       _isLoading = false.obs;
     } on FirebaseAuthException catch (e) {
       Get.snackbar(

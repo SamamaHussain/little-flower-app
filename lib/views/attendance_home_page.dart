@@ -23,10 +23,11 @@ class AttendanceHomeView extends StatelessWidget {
             // Wrap entire content in SingleChildScrollView
             physics: BouncingScrollPhysics(),
             child: Padding(
-              padding: EdgeInsets.all(16.w),
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(height: 14),
                   _buildCustomHeader(),
                   SizedBox(height: 30.h),
                   Text(
@@ -296,11 +297,13 @@ class AttendanceHomeView extends StatelessWidget {
         // Back button and title
         Row(
           children: [
-            IconButton(
-              icon: Icon(Icons.arrow_back_rounded, color: Color(0xFF2D3748)),
-              onPressed: () => Get.back(),
-              padding: EdgeInsets.zero,
-              constraints: BoxConstraints(),
+            InkWell(
+              onTap: () => Get.back(),
+              child: Icon(
+                Icons.arrow_back_rounded,
+                color: Color(0xFF2D3748),
+                size: 24.w,
+              ),
             ),
             SizedBox(width: 12.w),
             Text(
@@ -441,7 +444,7 @@ class AttendanceHomeView extends StatelessWidget {
             child: Icon(
               Icons.class_outlined,
               size: 48.w,
-              color: Color(0xFF3F4072),
+              color: AppColors.darkBlue,
             ),
           ),
           SizedBox(height: 24.h),
@@ -485,7 +488,7 @@ class AttendanceHomeView extends StatelessWidget {
             child: Icon(
               Icons.calendar_today_rounded,
               size: 40.w,
-              color: Color(0xFF3F4072),
+              color: AppColors.darkBlue,
             ),
           ),
           SizedBox(height: 20.h),

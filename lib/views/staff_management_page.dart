@@ -20,11 +20,12 @@ class StaffManagementView extends StatelessWidget {
               return _buildLoadingState();
             }
             return Padding(
-              padding: EdgeInsets.all(16.w),
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Column(
                 children: [
+                  SizedBox(height: 14.h),
                   _buildCustomHeader(),
-                  SizedBox(height: 30),
+                  SizedBox(height: 30.h),
                   // Header Stats
                   _buildHeaderStats(),
                   SizedBox(height: 20.h),
@@ -47,14 +48,14 @@ class StaffManagementView extends StatelessWidget {
                           vertical: 6.h,
                         ),
                         decoration: BoxDecoration(
-                          color: Color(0xFF3F4072).withOpacity(0.1),
+                          color: AppColors.darkBlue.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12.r),
                         ),
                         child: Text(
                           '${controller.staffList.length} ${controller.staffList.length == 1 ? 'Staff' : 'Staff'}',
                           style: TextStyle(
                             fontSize: 12.sp,
-                            color: Color(0xFF3F4072),
+                            color: AppColors.darkBlue,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -81,11 +82,13 @@ class StaffManagementView extends StatelessWidget {
         // Back button and title
         Row(
           children: [
-            IconButton(
-              icon: Icon(Icons.arrow_back_rounded, color: Color(0xFF2D3748)),
-              onPressed: () => Get.back(),
-              padding: EdgeInsets.zero,
-              constraints: BoxConstraints(),
+            InkWell(
+              onTap: () => Get.back(),
+              child: Icon(
+                Icons.arrow_back_rounded,
+                color: Color(0xFF2D3748),
+                size: 24.w,
+              ),
             ),
             SizedBox(width: 12.w),
             Text(
@@ -146,12 +149,12 @@ class StaffManagementView extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(12.w),
             decoration: BoxDecoration(
-              color: Color(0xFF3F4072).withOpacity(0.1),
+              color: AppColors.darkBlue.withOpacity(0.1),
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: Icon(
               Icons.people_alt_rounded,
-              color: Color(0xFF3F4072),
+              color: AppColors.darkBlue,
               size: 28.w,
             ),
           ),
@@ -296,7 +299,7 @@ class StaffManagementView extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: staff.accountType == 'admin'
                               ? Colors.orange.withOpacity(0.1)
-                              : Color(0xFF3F4072).withOpacity(0.1),
+                              : AppColors.darkBlue.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Text(
@@ -305,7 +308,7 @@ class StaffManagementView extends StatelessWidget {
                             fontSize: 10.sp,
                             color: staff.accountType == 'admin'
                                 ? Colors.orange
-                                : Color(0xFF3F4072),
+                                : AppColors.darkBlue,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -336,7 +339,7 @@ class StaffManagementView extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.edit_rounded,
-                            color: Color(0xFF3F4072),
+                            color: AppColors.darkBlue,
                             size: 18.w,
                           ),
                           SizedBox(width: 8.w),
@@ -350,7 +353,7 @@ class StaffManagementView extends StatelessWidget {
                         children: [
                           Icon(
                             Icons.lock_reset_rounded,
-                            color: Color(0xFF3F4072),
+                            color: AppColors.darkBlue,
                             size: 18.w,
                           ),
                           SizedBox(width: 8.w),
@@ -483,7 +486,7 @@ class StaffManagementView extends StatelessWidget {
                                 Get.back();
                               },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF3F4072),
+                          backgroundColor: AppColors.darkBlue,
                           padding: EdgeInsets.symmetric(vertical: 12.h),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.r),
@@ -530,13 +533,13 @@ class StaffManagementView extends StatelessWidget {
                 width: 60.w,
                 height: 60.w,
                 decoration: BoxDecoration(
-                  color: Color(0xFF3F4072).withOpacity(0.1),
+                  color: AppColors.darkBlue.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.lock_reset_rounded,
                   size: 32.w,
-                  color: Color(0xFF3F4072),
+                  color: AppColors.darkBlue,
                 ),
               ),
               SizedBox(height: 16.h),
@@ -588,7 +591,7 @@ class StaffManagementView extends StatelessWidget {
                                 Get.back();
                               },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFF3F4072),
+                          backgroundColor: AppColors.darkBlue,
                           padding: EdgeInsets.symmetric(vertical: 12.h),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12.r),
@@ -638,7 +641,7 @@ class StaffManagementView extends StatelessWidget {
             child: Icon(
               Icons.people_outline_rounded,
               size: 48.w,
-              color: Color(0xFF3F4072),
+              color: AppColors.darkBlue,
             ),
           ),
           SizedBox(height: 24.h),
@@ -659,7 +662,7 @@ class StaffManagementView extends StatelessWidget {
           ElevatedButton(
             onPressed: () => Get.toNamed(Routes.STAFF_SIGNUP),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFF3F4072),
+              backgroundColor: AppColors.darkBlue,
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.r),

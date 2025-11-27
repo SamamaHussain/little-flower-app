@@ -19,10 +19,11 @@ class AnnouncementsAdminPage extends GetView<AnnouncementsController> {
           return SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Padding(
-              padding: EdgeInsets.all(16.w),
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(height: 14.h),
                   _buildCustomHeader(),
                   SizedBox(height: 30.h),
                   // Header Stats
@@ -50,7 +51,7 @@ class AnnouncementsAdminPage extends GetView<AnnouncementsController> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showCreateAnnouncementDialog(),
-        backgroundColor: Color(0xFF3F4072),
+        backgroundColor: AppColors.darkBlue,
         child: Icon(Icons.add_rounded, color: Colors.white, size: 24.w),
       ),
     );
@@ -63,11 +64,13 @@ class AnnouncementsAdminPage extends GetView<AnnouncementsController> {
         // Back button and title
         Row(
           children: [
-            IconButton(
-              icon: Icon(Icons.arrow_back_rounded, color: Color(0xFF2D3748)),
-              onPressed: () => Get.back(),
-              padding: EdgeInsets.zero,
-              constraints: BoxConstraints(),
+            InkWell(
+              onTap: () => Get.back(),
+              child: Icon(
+                Icons.arrow_back_rounded,
+                color: Color(0xFF2D3748),
+                size: 24.w,
+              ),
             ),
             SizedBox(width: 12.w),
             Text(
@@ -106,7 +109,7 @@ class AnnouncementsAdminPage extends GetView<AnnouncementsController> {
             child: Icon(
               Icons.announcement_rounded,
               size: 40.w,
-              color: Color(0xFF3F4072),
+              color: AppColors.darkBlue,
             ),
           ),
           SizedBox(height: 20.h),
@@ -142,12 +145,12 @@ class AnnouncementsAdminPage extends GetView<AnnouncementsController> {
           Container(
             padding: EdgeInsets.all(12.w),
             decoration: BoxDecoration(
-              color: Color(0xFF3F4072).withOpacity(0.1),
+              color: AppColors.darkBlue.withOpacity(0.1),
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: Icon(
               Icons.announcement_rounded,
-              color: Color(0xFF3F4072),
+              color: AppColors.darkBlue,
               size: 28.w,
             ),
           ),
@@ -307,13 +310,13 @@ class AnnouncementsAdminPage extends GetView<AnnouncementsController> {
                     Container(
                       padding: EdgeInsets.all(6.w),
                       decoration: BoxDecoration(
-                        color: Color(0xFF3F4072).withOpacity(0.1),
+                        color: AppColors.darkBlue.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8.r),
                       ),
                       child: Icon(
                         Icons.calendar_today_rounded,
                         size: 14.w,
-                        color: Color(0xFF3F4072),
+                        color: AppColors.darkBlue,
                       ),
                     ),
                     SizedBox(width: 8.w),
@@ -381,7 +384,7 @@ class AnnouncementsAdminPage extends GetView<AnnouncementsController> {
             value: 'edit',
             child: Row(
               children: [
-                Icon(Icons.edit_rounded, color: Color(0xFF3F4072), size: 18.w),
+                Icon(Icons.edit_rounded, color: AppColors.darkBlue, size: 18.w),
                 SizedBox(width: 8.w),
                 Text('Edit'),
               ],
@@ -424,7 +427,7 @@ class AnnouncementsAdminPage extends GetView<AnnouncementsController> {
             child: Icon(
               Icons.announcement_outlined,
               size: 48.w,
-              color: Color(0xFF3F4072),
+              color: AppColors.darkBlue,
             ),
           ),
           SizedBox(height: 24.h),
@@ -433,7 +436,7 @@ class AnnouncementsAdminPage extends GetView<AnnouncementsController> {
             style: TextStyle(
               fontSize: 18.sp,
               fontWeight: FontWeight.w600,
-              color: Color(0xFF2D3748),
+              color: AppColors.darkBlue,
             ),
           ),
           SizedBox(height: 8.h),
@@ -446,7 +449,7 @@ class AnnouncementsAdminPage extends GetView<AnnouncementsController> {
           ElevatedButton.icon(
             onPressed: () => _showCreateAnnouncementDialog(),
             style: ElevatedButton.styleFrom(
-              backgroundColor: Color(0xFF3F4072),
+              backgroundColor: AppColors.darkBlue,
               padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12.r),
@@ -524,7 +527,7 @@ class AnnouncementsAdminPage extends GetView<AnnouncementsController> {
               Container(
                 padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
-                  color: Color(0xFF3F4072).withOpacity(0.05),
+                  color: AppColors.darkBlue.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Column(
@@ -534,7 +537,7 @@ class AnnouncementsAdminPage extends GetView<AnnouncementsController> {
                         Icon(
                           Icons.calendar_today_rounded,
                           size: 16.w,
-                          color: Color(0xFF3F4072),
+                          color: AppColors.darkBlue,
                         ),
                         SizedBox(width: 8.w),
                         Text(
@@ -577,7 +580,7 @@ class AnnouncementsAdminPage extends GetView<AnnouncementsController> {
                 child: TextButton(
                   onPressed: () => Get.back(),
                   style: TextButton.styleFrom(
-                    foregroundColor: Color(0xFF3F4072),
+                    foregroundColor: AppColors.darkBlue,
                     padding: EdgeInsets.symmetric(
                       horizontal: 24.w,
                       vertical: 8.h,
@@ -819,7 +822,7 @@ class AnnouncementsAdminPage extends GetView<AnnouncementsController> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF3F4072),
+                    backgroundColor: AppColors.darkBlue,
                     padding: EdgeInsets.symmetric(vertical: 14.h),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.r),
@@ -949,7 +952,7 @@ class AnnouncementsAdminPage extends GetView<AnnouncementsController> {
                     }
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF3F4072),
+                    backgroundColor: AppColors.darkBlue,
                     padding: EdgeInsets.symmetric(vertical: 14.h),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12.r),

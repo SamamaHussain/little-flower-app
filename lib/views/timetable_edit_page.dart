@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,6 +27,7 @@ class EditTimetableScreen extends GetView<TimetableController> {
       body: SafeArea(
         child: Column(
           children: [
+            SizedBox(height: 14.h),
             // Custom Header
             _buildCustomHeader(),
             SizedBox(height: 16.h),
@@ -71,7 +73,7 @@ class EditTimetableScreen extends GetView<TimetableController> {
                                   vertical: 6.h,
                                 ),
                                 decoration: BoxDecoration(
-                                  color: AppColors.green.withOpacity(0.4),
+                                  color: AppColors.yellow.withOpacity(0.3),
                                   borderRadius: BorderRadius.circular(12.r),
                                 ),
                                 child: Row(
@@ -82,7 +84,7 @@ class EditTimetableScreen extends GetView<TimetableController> {
                                       style: TextStyle(
                                         fontSize: 12.sp,
                                         fontWeight: FontWeight.w600,
-                                        color: Colors.black,
+                                        color: AppColors.darkBlue,
                                       ),
                                     ),
                                   ],
@@ -205,19 +207,22 @@ class EditTimetableScreen extends GetView<TimetableController> {
 
   Widget _buildCustomHeader() {
     return Padding(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Back button and title
           Row(
             children: [
-              IconButton(
-                icon: Icon(Icons.arrow_back_rounded, color: Color(0xFF2D3748)),
-                onPressed: () => Get.back(),
-                padding: EdgeInsets.zero,
-                constraints: BoxConstraints(),
+              InkWell(
+                onTap: () => Get.back(),
+                child: Icon(
+                  Icons.arrow_back_rounded,
+                  color: Color(0xFF2D3748),
+                  size: 24.w,
+                ),
               ),
+
               SizedBox(width: 12.w),
               Text(
                 'Edit Timetable',
@@ -237,13 +242,13 @@ class EditTimetableScreen extends GetView<TimetableController> {
                     width: 40.w,
                     height: 40.w,
                     decoration: BoxDecoration(
-                      color: AppColors.green,
+                      color: AppColors.darkBlue,
                       borderRadius: BorderRadius.circular(12.r),
                     ),
                     child: IconButton(
                       icon: Icon(
                         Icons.add_rounded,
-                        color: Colors.black,
+                        color: Colors.white,
                         size: 20.w,
                       ),
                       onPressed: () => controller.addTimeSlotToCurrentDay(),
@@ -274,18 +279,18 @@ class EditTimetableScreen extends GetView<TimetableController> {
               child: GestureDetector(
                 onTap: () => controller.selectedDay.value = day,
                 child: Container(
-                  width: 70.w, // Fixed width for all boxes
-                  height: 50.h, // Fixed height for all boxes
+                  width: 70.w,
+                  height: 50.h,
                   padding: EdgeInsets.symmetric(
                     horizontal: 8.w,
                     vertical: 12.h,
                   ),
                   decoration: BoxDecoration(
-                    color: isSelected ? AppColors.green : Colors.transparent,
+                    color: isSelected ? AppColors.darkBlue : Colors.transparent,
                     borderRadius: BorderRadius.circular(12.r),
                     border: Border.all(
                       color: isSelected
-                          ? Colors.black.withOpacity(0)
+                          ? AppColors.darkBlue
                           : Color(0xFFE2E8F0),
                       width: 1.w,
                     ),
@@ -299,7 +304,7 @@ class EditTimetableScreen extends GetView<TimetableController> {
                         style: TextStyle(
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w600,
-                          color: isSelected ? Colors.black : Color(0xFF718096),
+                          color: isSelected ? Colors.white : Color(0xFF718096),
                         ),
                       ),
                     ],
@@ -366,7 +371,7 @@ class EditTimetableScreen extends GetView<TimetableController> {
             child: Icon(
               Icons.schedule_rounded,
               size: 48.w,
-              color: Color(0xFF3F4072),
+              color: AppColors.darkBlue,
             ),
           ),
           SizedBox(height: 24.h),
@@ -495,7 +500,7 @@ class EditTimetableScreen extends GetView<TimetableController> {
                   decoration: BoxDecoration(
                     color: timeSlot.isBreak
                         ? AppColors.yellow.withOpacity(0.2)
-                        : AppColors.green.withOpacity(0.6),
+                        : AppColors.darkBlue.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12.r),
                   ),
                   child: Column(
@@ -506,8 +511,8 @@ class EditTimetableScreen extends GetView<TimetableController> {
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w600,
                           color: timeSlot.isBreak
-                              ? AppColors.yellow
-                              : Colors.black,
+                              ? Color(0xFFE67701)
+                              : AppColors.darkBlue,
                         ),
                       ),
                       SizedBox(height: 2.h),
@@ -515,8 +520,8 @@ class EditTimetableScreen extends GetView<TimetableController> {
                         width: 20.w,
                         height: 1.h,
                         color: timeSlot.isBreak
-                            ? AppColors.yellow
-                            : Colors.black,
+                            ? Color(0xFFE67701)
+                            : AppColors.darkBlue,
                       ),
                       SizedBox(height: 2.h),
                       Text(
@@ -525,8 +530,8 @@ class EditTimetableScreen extends GetView<TimetableController> {
                           fontSize: 12.sp,
                           fontWeight: FontWeight.w600,
                           color: timeSlot.isBreak
-                              ? AppColors.yellow
-                              : Colors.black,
+                              ? Color(0xFFE67701)
+                              : AppColors.darkBlue,
                         ),
                       ),
                     ],
@@ -545,7 +550,7 @@ class EditTimetableScreen extends GetView<TimetableController> {
                           style: TextStyle(
                             fontSize: 16.sp,
                             fontWeight: FontWeight.w600,
-                            color: AppColors.yellow,
+                            color: Color(0xFFE67701),
                           ),
                         ),
                         SizedBox(height: 4.h),
@@ -588,13 +593,13 @@ class EditTimetableScreen extends GetView<TimetableController> {
                   width: 36.w,
                   height: 36.w,
                   decoration: BoxDecoration(
-                    color: AppColors.green.withOpacity(0.6),
+                    color: AppColors.darkBlue.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(10.r),
                   ),
                   child: Icon(
                     Icons.edit_rounded,
                     size: 16.w,
-                    color: Colors.black,
+                    color: AppColors.darkBlue,
                   ),
                 ),
               ],
@@ -783,7 +788,10 @@ class EditTimetableScreen extends GetView<TimetableController> {
                           borderRadius: BorderRadius.circular(12.r),
                         ),
                       ),
-                      child: Text('Save'),
+                      child: Text(
+                        'Save',
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                   ),
                 ],

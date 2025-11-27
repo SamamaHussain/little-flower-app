@@ -16,6 +16,7 @@ class TimetableManagement extends GetView<TimetableController> {
       body: SafeArea(
         child: Column(
           children: [
+            SizedBox(height: 14.h),
             // Custom Header
             _buildCustomHeader(),
             SizedBox(height: 16.h),
@@ -54,19 +55,22 @@ class TimetableManagement extends GetView<TimetableController> {
 
   Widget _buildCustomHeader() {
     return Padding(
-      padding: EdgeInsets.all(16.w),
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Back button and title
           Row(
             children: [
-              IconButton(
-                icon: Icon(Icons.arrow_back_rounded, color: Color(0xFF2D3748)),
-                onPressed: () => Get.back(),
-                padding: EdgeInsets.zero,
-                constraints: BoxConstraints(),
+              InkWell(
+                onTap: () => Get.back(),
+                child: Icon(
+                  Icons.arrow_back_rounded,
+                  color: Color(0xFF2D3748),
+                  size: 24.w,
+                ),
               ),
+
               SizedBox(width: 12.w),
               Text(
                 'Timetable Management',
@@ -104,12 +108,12 @@ class TimetableManagement extends GetView<TimetableController> {
             Container(
               padding: EdgeInsets.all(12.w),
               decoration: BoxDecoration(
-                color: Color(0xFF3F4072).withOpacity(0.1),
+                color: AppColors.darkBlue.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(16.r),
               ),
               child: Icon(
                 Icons.schedule_rounded,
-                color: Color(0xFF3F4072),
+                color: AppColors.darkBlue,
                 size: 28.w,
               ),
             ),
@@ -212,7 +216,7 @@ class TimetableManagement extends GetView<TimetableController> {
             child: Icon(
               Icons.schedule_rounded,
               size: 48.w,
-              color: Color(0xFF3F4072),
+              color: AppColors.darkBlue,
             ),
           ),
           SizedBox(height: 24.h),
@@ -262,87 +266,156 @@ class TimetableManagement extends GetView<TimetableController> {
   }
 
   Widget _buildTimetableCard(ClassTimetable timetable, int index) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 12.h),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(25.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
+    return GestureDetector(
+      onLongPress: () => _showDeleteConfirmationDialog(timetable),
+      child: Container(
+        margin: EdgeInsets.only(bottom: 12.h),
+        decoration: BoxDecoration(
+          color: Colors.white,
           borderRadius: BorderRadius.circular(25.r),
-          onTap: () => Get.to(
-            () => EditTimetableScreen(),
-            arguments: {'grade': timetable.grade, 'section': timetable.section},
-          ),
-          child: Padding(
-            padding: EdgeInsets.all(20.w),
-            child: Row(
-              children: [
-                // Class Icon with rotating colors - matching attendance style
-                Container(
-                  width: 50.w,
-                  height: 50.w,
-                  decoration: BoxDecoration(
-                    color: _getAvatarColor(index),
-                    borderRadius: BorderRadius.circular(16.r),
-                  ),
-                  child: Icon(
-                    Icons.school_rounded,
-                    color: Colors.white,
-                    size: 24.w,
-                  ),
-                ),
-                SizedBox(width: 16.w),
-
-                // Class Info - matching attendance text styling
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        timetable.className,
-                        style: TextStyle(
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF2D3748),
-                        ),
-                      ),
-                      SizedBox(height: 4.h),
-                      Text(
-                        '${_getTotalLectures(timetable)} lectures • ${_getTotalDays(timetable)} days',
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          color: Color(0xFF718096),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // Forward Arrow - matching attendance style
-                Container(
-                  padding: EdgeInsets.all(8.w),
-                  decoration: BoxDecoration(
-                    color: AppColors.darkBlue.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(100.r),
-                  ),
-                  child: Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    size: 16.w,
-                    color: AppColors.darkBlue,
-                  ),
-                ),
-              ],
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: Offset(0, 2),
             ),
+          ],
+        ),
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(25.r),
+            onTap: () => Get.to(
+              () => EditTimetableScreen(),
+              arguments: {
+                'grade': timetable.grade,
+                'section': timetable.section,
+              },
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(20.w),
+              child: Row(
+                children: [
+                  // Class Icon with rotating colors - matching attendance style
+                  Container(
+                    width: 50.w,
+                    height: 50.w,
+                    decoration: BoxDecoration(
+                      color: _getAvatarColor(index),
+                      borderRadius: BorderRadius.circular(16.r),
+                    ),
+                    child: Icon(
+                      Icons.school_rounded,
+                      color: Colors.white,
+                      size: 24.w,
+                    ),
+                  ),
+                  SizedBox(width: 16.w),
+
+                  // Class Info - matching attendance text styling
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          timetable.className,
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Color(0xFF2D3748),
+                          ),
+                        ),
+                        SizedBox(height: 4.h),
+                        Text(
+                          '${_getTotalLectures(timetable)} lectures • ${_getTotalDays(timetable)} days',
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: Color(0xFF718096),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Forward Arrow - matching attendance style
+                  Container(
+                    padding: EdgeInsets.all(8.w),
+                    decoration: BoxDecoration(
+                      color: AppColors.darkBlue.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(100.r),
+                    ),
+                    child: Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      size: 16.w,
+                      color: AppColors.darkBlue,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showDeleteConfirmationDialog(ClassTimetable timetable) {
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25.r),
+        ),
+        child: Container(
+          padding: EdgeInsets.all(20.w),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.delete_outline_rounded, size: 48.w, color: Colors.red),
+              SizedBox(height: 16.h),
+              Text(
+                'Delete Timetable?',
+                style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 8.h),
+              Text(
+                'Are you sure you want to delete ${timetable.className} timetable?',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: const Color.fromARGB(255, 59, 59, 59),
+                ),
+              ),
+              SizedBox(height: 24.h),
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Get.back(),
+                      child: Text(
+                        'Cancel',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        Get.back();
+                        await controller.deleteTimetable(timetable.id);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                      ),
+                      child: Text(
+                        'Delete',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),

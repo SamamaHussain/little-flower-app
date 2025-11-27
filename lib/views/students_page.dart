@@ -16,13 +16,14 @@ class StudentsView extends GetView<StudentsController> {
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Padding(
-            padding: EdgeInsets.all(16.w),
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                SizedBox(height: 14),
                 // HEADER
                 _buildCustomHeader(),
-                SizedBox(height: 30),
+                SizedBox(height: 20),
 
                 // SEARCH + FILTERS
                 _buildSearchAndFilters(),
@@ -73,16 +74,17 @@ class StudentsView extends GetView<StudentsController> {
 
   Widget _buildCustomHeader() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         // Back button and title
         Row(
           children: [
-            IconButton(
-              icon: Icon(Icons.arrow_back_rounded, color: Color(0xFF2D3748)),
-              onPressed: () => Get.back(),
-              padding: EdgeInsets.zero,
-              constraints: BoxConstraints(),
+            InkWell(
+              onTap: () => Get.back(),
+              child: Icon(
+                Icons.arrow_back_rounded,
+                color: Color(0xFF2D3748),
+                size: 24.w,
+              ),
             ),
             SizedBox(width: 12.w),
             Text(
@@ -616,12 +618,12 @@ class StudentsView extends GetView<StudentsController> {
                   Container(
                     padding: EdgeInsets.all(4.w),
                     decoration: BoxDecoration(
-                      color: Color(0xFF3F4072).withOpacity(0.1),
+                      color: AppColors.darkBlue.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(6.r),
                     ),
                     child: Icon(
                       Icons.edit_rounded,
-                      color: Color(0xFF3F4072),
+                      color: AppColors.darkBlue,
                       size: 16.w,
                     ),
                   ),
