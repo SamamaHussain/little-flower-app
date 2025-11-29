@@ -11,6 +11,9 @@ class StaffController extends GetxController {
   final RxList<Staff> staffList = <Staff>[].obs;
   final Rxn<Staff> currentStaff = Rxn<Staff>();
 
+  final RxBool showPassword = false.obs;
+  final RxBool showConfirmPassword = false.obs;
+
   final RxBool isSendingResetEmail = false.obs;
   final RxBool isLoading = false.obs;
   final RxBool isCreating = false.obs;
@@ -149,6 +152,7 @@ class StaffController extends GetxController {
   ) async {
     try {
       isUpdating.value = true;
+      isLoading.value = true;
 
       await _staffServices.updateStaffName(uid, firstName, lastName);
 
@@ -164,6 +168,7 @@ class StaffController extends GetxController {
       Get.snackbar("Error", "$e");
     } finally {
       isUpdating.value = false;
+      isLoading.value = false;
     }
   }
 

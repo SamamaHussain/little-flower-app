@@ -9,6 +9,7 @@ class AuthController extends GetxController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final _firestore = FirebaseFirestore.instance;
   final Rx<User?> _user = Rx<User?>(null);
+  var isPasswordVisible = false.obs;
   RxBool _isLoading = false.obs;
   User? get user => _user.value;
 
@@ -72,14 +73,14 @@ class AuthController extends GetxController {
 
   Future<void> login(String email, String password) async {
     try {
-      _isLoading = true.obs;
+      _isLoading.value = true;
       await _auth.signInWithEmailAndPassword(
         email: email.trim(),
         password: password.trim(),
       );
       print('Current user is ${_auth.currentUser}');
       Get.offAllNamed(Routes.DASHBOARD);
-      _isLoading = false.obs;
+      _isLoading.value = false;
     } on FirebaseAuthException catch (e) {
       Get.snackbar(
         'Login Failed',
@@ -93,6 +94,10 @@ class AuthController extends GetxController {
     await _auth.signOut();
     print('User after logout: ${_auth.currentUser}');
     Get.offAllNamed('/guest');
+  }
+
+  void togglePasswordVisibility() {
+    isPasswordVisible.value = !isPasswordVisible.value;
   }
 
   // Auto-logout happens when app is completely closed (Firebase handles this)

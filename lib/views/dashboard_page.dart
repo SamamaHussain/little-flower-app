@@ -259,7 +259,7 @@ class DashboardPage extends GetView<AuthController> {
                     if (value == 'logout') {
                       controller.logout();
                     } else if (value == 'profile') {
-                      _showProfile();
+                      Get.toNamed(Routes.PROFILE);
                     } else if (value == 'notifications') {
                       _showNotifications();
                     } else if (value == 'refresh_weather') {
@@ -1076,14 +1076,6 @@ class DashboardPage extends GetView<AuthController> {
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: Colors.grey[800]!,
       colorText: Colors.white,
-    );
-  }
-
-  void _showProfile() {
-    Get.snackbar(
-      'Profile',
-      'Profile section coming soon',
-      snackPosition: SnackPosition.BOTTOM,
     );
   }
 }

@@ -15,6 +15,7 @@ abstract class Routes {
   static const TIMETABLE = _Paths.TIMETABLE;
   static const VIEWTIMETABLE = _Paths.VIEWTIMETABLE;
   static const NAVBAR = _Paths.NAVBAR;
+  static const PROFILE = _Paths.PROFILE;
 }
 
 abstract class _Paths {
@@ -32,4 +33,5 @@ abstract class _Paths {
   static const ANOUNCEMENT = '/anounce';
   static const TIMETABLE = '/time';
   static const VIEWTIMETABLE = '/viewtime';
+  static const PROFILE = '/profile';
 }

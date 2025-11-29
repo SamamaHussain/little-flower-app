@@ -13,6 +13,7 @@ import 'package:little_flower_app/views/attendance_home_page.dart';
 import 'package:little_flower_app/views/auth_page.dart';
 import 'package:little_flower_app/views/dashboard_page.dart';
 import 'package:little_flower_app/views/guest_page.dart';
+import 'package:little_flower_app/views/profile_page.dart';
 import 'package:little_flower_app/views/staff_management_page.dart';
 import 'package:little_flower_app/views/staff_signup_page.dart';
 import 'package:little_flower_app/views/students_page.dart';
@@ -27,6 +28,11 @@ class AppPages {
   static const TEST = Routes.TEST;
 
   static final routes = [
+    GetPage(
+      name: _Paths.PROFILE,
+      page: () => ProfilePage(),
+      binding: StaffManageBindings(),
+    ),
     GetPage(
       name: _Paths.VIEWTIMETABLE,
       page: () => ViewTimetableHome(),

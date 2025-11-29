@@ -154,13 +154,21 @@ class AuthPage extends GetView<AuthController> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _inputField('Email Address', Icons.email_rounded, emailController),
-        SizedBox(height: 16.h),
         _inputField(
-          'Password',
-          Icons.lock_rounded,
-          passwordController,
-          isPassword: true,
+          'Email Address',
+          Icons.email_rounded,
+          false,
+          emailController,
+        ),
+        SizedBox(height: 16.h),
+        Obx(
+          () => _inputField(
+            'Password',
+            Icons.lock_rounded,
+            controller.isPasswordVisible.value,
+            passwordController,
+            isPassword: true,
+          ),
         ),
       ],
     );
@@ -169,7 +177,8 @@ class AuthPage extends GetView<AuthController> {
   Widget _inputField(
     String label,
     IconData icon,
-    TextEditingController controller, {
+    bool isObscure,
+    TextEditingController textController, {
     bool isPassword = false,
   }) {
     return Column(
@@ -184,6 +193,7 @@ class AuthPage extends GetView<AuthController> {
           ),
         ),
         SizedBox(height: 10.h),
+
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
@@ -198,8 +208,8 @@ class AuthPage extends GetView<AuthController> {
             ],
           ),
           child: TextField(
-            controller: controller,
-            obscureText: isPassword,
+            controller: textController,
+            obscureText: isObscure,
             style: TextStyle(fontSize: 15.sp, color: Color(0xFF2D3748)),
             decoration: InputDecoration(
               contentPadding: EdgeInsets.symmetric(
@@ -207,11 +217,28 @@ class AuthPage extends GetView<AuthController> {
                 vertical: 16.h,
               ),
               border: InputBorder.none,
-              prefixIcon: Container(
+              prefixIcon: Padding(
                 padding: EdgeInsets.all(12.w),
                 child: Icon(icon, size: 22.w, color: AppColors.darkBlue),
               ),
-              hintText: 'Enter your ${label.toLowerCase()}',
+
+              // 🔥 only wrap the icon in Obx, not the whole row
+              suffixIcon: isPassword
+                  ? Obx(
+                      () => IconButton(
+                        onPressed: () => controller.togglePasswordVisibility(),
+                        icon: Icon(
+                          controller.isPasswordVisible.value
+                              ? Icons.visibility_rounded
+                              : Icons.visibility_off_rounded,
+                          size: 22.w,
+                          color: AppColors.darkBlue,
+                        ),
+                      ),
+                    )
+                  : null,
+
+              hintText: "Enter your ${label.toLowerCase()}",
               hintStyle: TextStyle(
                 fontSize: 14.sp,
                 color: Color(0xFFCBD5E0),

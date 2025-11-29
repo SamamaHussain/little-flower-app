@@ -106,6 +106,7 @@ class StaffSignUpView extends StatelessWidget {
                             controller: firstNameController,
                             label: 'First Name',
                             hintText: 'Enter first name',
+                            isObscure: false,
                           ),
                         ),
                         SizedBox(width: 12.w),
@@ -114,6 +115,7 @@ class StaffSignUpView extends StatelessWidget {
                             controller: lastNameController,
                             label: 'Last Name',
                             hintText: 'Enter last name',
+                            isObscure: false,
                           ),
                         ),
                       ],
@@ -126,25 +128,36 @@ class StaffSignUpView extends StatelessWidget {
                       label: 'Email Address',
                       hintText: 'Enter email address',
                       keyboardType: TextInputType.emailAddress,
+                      isObscure: false,
                     ),
                     SizedBox(height: 20.h),
 
                     // Password
-                    _buildTextField(
-                      controller: passwordController,
-                      label: 'Password',
-                      hintText: 'Enter password',
-                      isPassword: true,
+                    Obx(
+                      () => _buildTextField(
+                        controller: passwordController,
+                        label: 'Password',
+                        hintText: 'Enter password',
+                        isPassword: true,
+                        toggle: controller.showPassword,
+                        isObscure: controller.showPassword.value,
+                      ),
                     ),
+
                     SizedBox(height: 20.h),
 
                     // Confirm Password
-                    _buildTextField(
-                      controller: confirmPasswordController,
-                      label: 'Confirm Password',
-                      hintText: 'Re-enter password',
-                      isPassword: true,
+                    Obx(
+                      () => _buildTextField(
+                        controller: confirmPasswordController,
+                        label: 'Confirm Password',
+                        hintText: 'Re-enter password',
+                        isPassword: true,
+                        toggle: controller.showConfirmPassword,
+                        isObscure: controller.showConfirmPassword.value,
+                      ),
                     ),
+
                     SizedBox(height: 28.h),
 
                     // Create Account Button
@@ -239,8 +252,10 @@ class StaffSignUpView extends StatelessWidget {
     required TextEditingController controller,
     required String label,
     required String hintText,
+    required bool isObscure,
     TextInputType keyboardType = TextInputType.text,
     bool isPassword = false,
+    RxBool? toggle,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -254,6 +269,7 @@ class StaffSignUpView extends StatelessWidget {
           ),
         ),
         SizedBox(height: 8.h),
+
         Container(
           decoration: BoxDecoration(
             color: Color(0xFFF8F9FA),
@@ -262,17 +278,26 @@ class StaffSignUpView extends StatelessWidget {
           ),
           child: TextField(
             controller: controller,
-            obscureText: isPassword,
             keyboardType: keyboardType,
+            obscureText: isObscure,
             decoration: InputDecoration(
               hintText: hintText,
               border: InputBorder.none,
               contentPadding: EdgeInsets.all(16.w),
+
+              // 👇 PASSWORD TOGGLE ICON
               suffixIcon: isPassword
-                  ? Icon(
-                      Icons.visibility_off_rounded,
-                      color: Color(0xFF718096),
-                      size: 20.w,
+                  ? Obx(
+                      () => InkWell(
+                        onTap: () => toggle?.value = !(toggle.value),
+                        child: Icon(
+                          (toggle?.value ?? false)
+                              ? Icons.visibility_rounded
+                              : Icons.visibility_off_rounded,
+                          color: Color(0xFF718096),
+                          size: 20.w,
+                        ),
+                      ),
                     )
                   : null,
             ),
