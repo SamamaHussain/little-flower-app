@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:little_flower_app/controllers/announcement_controller.dart';
+import 'package:little_flower_app/controllers/school_info_controller.dart';
 import 'package:little_flower_app/controllers/weather_controller.dart';
 import 'package:little_flower_app/routes/app_pages.dart';
 import 'package:little_flower_app/utils/colors.dart';
@@ -778,43 +779,47 @@ class GuestPage extends GetView<AnnouncementsController> {
   }
 
   Widget _buildSchoolInfoTiles() {
-    final infoItems = [
-      SchoolInfoItem(
-        title: 'School Hours',
-        subtitle: '7:30 AM - 2:30 PM',
-        imagePath: 'assets/icons/info/clock.png', // PNG path
-        color: AppColors.green,
-      ),
-      SchoolInfoItem(
-        title: 'Office Hours',
-        subtitle: '7:00 AM - 4:00 PM',
-        imagePath: 'assets/icons/info/working-time.png', // PNG path
-        color: AppColors.lightBlue,
-      ),
-      SchoolInfoItem(
-        title: 'Contact Information',
-        subtitle: '+1 (555) 123-4567\ninfo@school.edu',
-        imagePath: 'assets/icons/info/contact-us.png', // PNG path
-        color: AppColors.pink,
-      ),
-      SchoolInfoItem(
-        title: 'Visit Our Campus',
-        subtitle: '123 Education Street, City',
-        imagePath: 'assets/icons/info/location.png', // PNG path
-        color: AppColors.yellow,
-      ),
-    ];
+    final SchoolInfoController schoolInfoController = Get.find<SchoolInfoController>();
 
-    return Column(
-      children: infoItems.asMap().entries.map((entry) {
-        final index = entry.key;
-        final item = entry.value;
-        return Padding(
-          padding: EdgeInsets.only(bottom: 10.h),
-          child: _buildInfoTile(item, index),
-        );
-      }).toList(),
-    );
+    return Obx(() {
+      final infoItems = [
+        SchoolInfoItem(
+          title: 'School Hours',
+          subtitle: schoolInfoController.schoolHours.value,
+          imagePath: 'assets/icons/info/clock.png',
+          color: AppColors.green,
+        ),
+        SchoolInfoItem(
+          title: 'Office Hours',
+          subtitle: schoolInfoController.officeHours.value,
+          imagePath: 'assets/icons/info/working-time.png',
+          color: AppColors.lightBlue,
+        ),
+        SchoolInfoItem(
+          title: 'Contact Information',
+          subtitle: '${schoolInfoController.contactPhone.value}\n${schoolInfoController.contactEmail.value}',
+          imagePath: 'assets/icons/info/contact-us.png',
+          color: AppColors.pink,
+        ),
+        SchoolInfoItem(
+          title: 'Visit Our Campus',
+          subtitle: schoolInfoController.schoolAddress.value,
+          imagePath: 'assets/icons/info/location.png',
+          color: AppColors.yellow,
+        ),
+      ];
+
+      return Column(
+        children: infoItems.asMap().entries.map((entry) {
+          final index = entry.key;
+          final item = entry.value;
+          return Padding(
+            padding: EdgeInsets.only(bottom: 10.h),
+            child: _buildInfoTile(item, index),
+          );
+        }).toList(),
+      );
+    });
   }
 
   Widget _buildInfoTile(SchoolInfoItem item, int index) {

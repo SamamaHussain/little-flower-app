@@ -16,6 +16,7 @@ abstract class Routes {
   static const VIEWTIMETABLE = _Paths.VIEWTIMETABLE;
   static const NAVBAR = _Paths.NAVBAR;
   static const PROFILE = _Paths.PROFILE;
+  static const INFO = _Paths.INFO;
 }
 
 abstract class _Paths {
@@ -34,4 +35,5 @@ abstract class _Paths {
   static const TIMETABLE = '/time';
   static const VIEWTIMETABLE = '/viewtime';
   static const PROFILE = '/profile';
+  static const INFO = '/info';
 }

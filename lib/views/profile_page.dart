@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:little_flower_app/controllers/auth_controller.dart';
+import 'package:little_flower_app/controllers/picture_controller.dart';
 import 'package:little_flower_app/controllers/staff_controller.dart';
 import 'package:little_flower_app/utils/colors.dart';
 import 'package:intl/intl.dart';
@@ -399,72 +400,133 @@ class ProfilePage extends GetView<AuthController> {
   }
 
   Widget _buildProfilePictureSection() {
-    final StaffController staffController = Get.find<StaffController>();
+    final PictureController pictureController = Get.find<PictureController>();
 
     return Obx(() {
-      final staff = staffController.currentStaff.value;
+      // If user is NOT admin, always show default image
+      if (!controller.isAdmin) {
+        return Center(
+          child: _buildDefaultProfilePicture(),
+        );
+      }
+
+      // If user IS admin, show loading/Firestore image
+      if (pictureController.isLoading.value) {
+        return Center(
+          child: Container(
+            width: 120.w,
+            height: 120.w,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey[200],
+            ),
+            child: Center(
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: AppColors.darkBlue,
+              ),
+            ),
+          ),
+        );
+      }
 
       return Center(
-        child: Stack(
-          children: [
-            Container(
-              width: 120.w,
-              height: 120.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 15,
-                    offset: Offset(0, 5),
-                  ),
-                ],
+        child: Container(
+          width: 120.w,
+          height: 120.w,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.15),
+                blurRadius: 15,
+                offset: Offset(0, 5),
+                spreadRadius: 1,
               ),
-              child: ClipOval(
-                child: Image.network(
-                  'https://thumbs.dreamstime.com/b/profile-picture-caucasian-male-employee-posing-office-happy-young-worker-look-camera-workplace-headshot-portrait-smiling-190186649.jpg',
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [AppColors.darkBlue, AppColors.lightBlue],
+            ],
+          ),
+          child: ClipOval(
+            child: pictureController.profilePicUrl.value.isNotEmpty
+                ? Image.network(
+                    pictureController.profilePicUrl.value,
+                    fit: BoxFit.cover,
+                    loadingBuilder: (context, child, loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return Container(
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: [
+                              AppColors.darkBlue.withOpacity(0.7),
+                              AppColors.darkBlue,
+                            ],
+                          ),
                         ),
-                      ),
-                      child: Icon(
-                        Icons.person_rounded,
-                        color: Colors.white,
-                        size: 50.w,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              right: 0,
-              child: Container(
-                padding: EdgeInsets.all(8.w),
-                decoration: BoxDecoration(
-                  color: AppColors.darkBlue,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 3),
-                ),
-                child: Icon(
-                  Icons.camera_alt_rounded,
-                  color: Colors.white,
-                  size: 18.w,
-                ),
-              ),
-            ),
-          ],
+                        child: Center(
+                          child: CircularProgressIndicator(
+                            value: loadingProgress.expectedTotalBytes != null
+                                ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                                : null,
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    },
+                    errorBuilder: (context, error, stackTrace) {
+                      return _buildDefaultProfilePictureContent();
+                    },
+                  )
+                : _buildDefaultProfilePictureContent(),
+          ),
         ),
       );
     });
+  }
+
+  Widget _buildDefaultProfilePicture() {
+    return Container(
+      width: 120.w,
+      height: 120.w,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.darkBlue, AppColors.darkBlue],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.15),
+            blurRadius: 15,
+            offset: Offset(0, 5),
+            spreadRadius: 1,
+          ),
+        ],
+      ),
+      child: Icon(Icons.person_rounded, color: Colors.white, size: 50.w),
+    );
+  }
+
+  Widget _buildDefaultProfilePictureContent() {
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.darkBlue, AppColors.darkBlue],
+        ),
+      ),
+      child: Icon(
+        Icons.person_rounded,
+        color: Colors.white,
+        size: 50.w,
+      ),
+    );
   }
 
   Widget _buildInfoField(

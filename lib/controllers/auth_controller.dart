@@ -80,13 +80,14 @@ class AuthController extends GetxController {
       );
       print('Current user is ${_auth.currentUser}');
       Get.offAllNamed(Routes.DASHBOARD);
-      _isLoading.value = false;
     } on FirebaseAuthException catch (e) {
       Get.snackbar(
         'Login Failed',
         e.message ?? 'An error occurred during login',
         snackPosition: SnackPosition.BOTTOM,
       );
+    } finally {
+      _isLoading.value = false;
     }
   }
 

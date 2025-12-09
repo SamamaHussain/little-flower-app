@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:little_flower_app/controllers/announcement_controller.dart';
+import 'package:little_flower_app/controllers/picture_controller.dart';
 import 'package:little_flower_app/controllers/staff_controller.dart';
 import 'package:little_flower_app/controllers/students_controller.dart';
 import 'package:little_flower_app/controllers/weather_controller.dart';
@@ -48,17 +49,11 @@ class DashboardPage extends GetView<AuthController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // User Profile Section
-                      _buildUserProfileSection(
-                        authController,
-                        staffController,
-                      ),
+                      _buildUserProfileSection(authController, staffController),
                       SizedBox(height: 24.h),
 
                       // Quick Overview
-                      _buildQuickOverview(
-                        studentsController,
-                        staffController,
-                      ),
+                      _buildQuickOverview(studentsController, staffController),
                       SizedBox(height: 24.h),
 
                       // Live Announcements
@@ -88,71 +83,18 @@ class DashboardPage extends GetView<AuthController> {
   }
 
   Widget _buildFullScreenLoading() {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      color: Color(0xFFF8F9FA),
+    return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // Animated logo or icon
-          Container(
-            width: 100.w,
-            height: 100.w,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: AppColors.darkBlue.withOpacity(0.1),
-                  blurRadius: 20,
-                  offset: Offset(0, 8),
-                ),
-              ],
-            ),
-            child: Center(
-              child: Image.asset(
-                'assets/icons/logo.png',
-                width: 60.w,
-                height: 60.w,
-                errorBuilder: (context, error, stackTrace) {
-                  return Icon(
-                    Icons.school_rounded,
-                    size: 50.w,
-                    color: AppColors.darkBlue,
-                  );
-                },
-              ),
-            ),
+          CircularProgressIndicator(
+            strokeWidth: 3.w,
+            color: AppColors.darkBlue,
           ),
-          SizedBox(height: 32.h),
-          // Loading indicator
-          SizedBox(
-            width: 40.w,
-            height: 40.w,
-            child: CircularProgressIndicator(
-              strokeWidth: 3,
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.darkBlue),
-            ),
-          ),
-          SizedBox(height: 24.h),
-          // Loading text
+          SizedBox(height: 16.h),
           Text(
             'Loading Dashboard...',
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w500,
-              color: Color(0xFF718096),
-            ),
-          ),
-          SizedBox(height: 8.h),
-          Text(
-            'Please wait while we fetch your data',
-            style: TextStyle(
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w400,
-              color: Color(0xFF94A3B8),
-            ),
+            style: TextStyle(fontSize: 14.sp, color: Color(0xFF718096)),
           ),
         ],
       ),
@@ -554,51 +496,96 @@ class DashboardPage extends GetView<AuthController> {
     AuthController authController,
     StaffController staffController,
   ) {
+    final PictureController pictureController = Get.find<PictureController>();
+
     return Padding(
       padding: EdgeInsets.only(top: 16.h),
       child: Row(
         children: [
           // Profile Picture on Left
-          Container(
-            width: 80.w,
-            height: 80.h,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 8,
-                  offset: Offset(0, 2),
+          Obx(() {
+            // If user is NOT admin, always show default image
+            if (!authController.isAdmin) {
+              return _buildDefaultProfileImage();
+            }
+
+            // If user IS admin, show loading/Firestore image
+            if (pictureController.isLoading.value) {
+              return Container(
+                width: 80.w,
+                height: 80.w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.grey[200],
                 ),
-              ],
-            ),
-            child: ClipOval(
-              child: Image.network(
-                'https://thumbs.dreamstime.com/b/profile-picture-caucasian-male-employee-posing-office-happy-young-worker-look-camera-workplace-headshot-portrait-smiling-190186649.jpg', // Replace with actual profile image URL
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [
-                          AppColors.darkBlue,
-                          AppColors.darkBlue,
-                        ],
-                      ),
-                    ),
-                    child: Icon(
-                      Icons.person_rounded,
-                      color: Colors.white,
-                      size: 30.w,
-                    ),
-                  );
-                },
+                child: Center(
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: AppColors.darkBlue,
+                  ),
+                ),
+              );
+            }
+
+            return Container(
+              width: 80.w,
+              height: 80.w,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.15),
+                    blurRadius: 12,
+                    offset: Offset(0, 3),
+                    spreadRadius: 1,
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 4,
+                    offset: Offset(0, 1),
+                  ),
+                ],
               ),
-            ),
-          ),
+              child: ClipOval(
+                child: pictureController.profilePicUrl.value.isNotEmpty
+                    ? Image.network(
+                        pictureController.profilePicUrl.value,
+                        fit: BoxFit.cover,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return Container(
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              gradient: LinearGradient(
+                                begin: Alignment.topLeft,
+                                end: Alignment.bottomRight,
+                                colors: [
+                                  AppColors.darkBlue.withOpacity(0.7),
+                                  AppColors.darkBlue,
+                                ],
+                              ),
+                            ),
+                            child: Center(
+                              child: CircularProgressIndicator(
+                                value:
+                                    loadingProgress.expectedTotalBytes != null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                    : null,
+                                strokeWidth: 2,
+                                color: Colors.white,
+                              ),
+                            ),
+                          );
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return _buildDefaultProfileImage();
+                        },
+                      )
+                    : _buildDefaultProfileImage(),
+              ),
+            );
+          }),
           SizedBox(width: 22.w),
           // User Info
           Expanded(
@@ -638,6 +625,35 @@ class DashboardPage extends GetView<AuthController> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildDefaultProfileImage() {
+    return Container(
+      width: 80.w,
+      height: 80.w,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [AppColors.darkBlue, AppColors.darkBlue],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.15),
+            blurRadius: 12,
+            offset: Offset(0, 3),
+            spreadRadius: 1,
+          ),
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Icon(Icons.person_rounded, color: Colors.white, size: 30.w),
     );
   }
 
@@ -921,6 +937,18 @@ class DashboardPage extends GetView<AuthController> {
     }
 
     if (isAdmin) {
+      baseItems.insert(
+        3,
+        DashboardItem(
+          title: 'School Info',
+          imagePath: 'assets/icons/edit-info.png',
+          route: Routes.INFO,
+          color: AppColors.lightBlue,
+        ),
+      );
+    }
+
+    if (isAdmin) {
       baseItems.add(
         DashboardItem(
           title: 'Staff Management',
@@ -1017,6 +1045,9 @@ class DashboardPage extends GetView<AuthController> {
         break;
       case '/staff-manage':
         Get.toNamed(Routes.STAFF_MANAGEMENT);
+        break;
+      case '/info':
+        Get.toNamed(Routes.INFO);
         break;
       case '/exam-results':
         _showComingSoon('Exam Results');

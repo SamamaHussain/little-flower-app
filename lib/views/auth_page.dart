@@ -165,7 +165,7 @@ class AuthPage extends GetView<AuthController> {
           () => _inputField(
             'Password',
             Icons.lock_rounded,
-            controller.isPasswordVisible.value,
+            !controller.isPasswordVisible.value,
             passwordController,
             isPassword: true,
           ),
@@ -229,8 +229,8 @@ class AuthPage extends GetView<AuthController> {
                         onPressed: () => controller.togglePasswordVisibility(),
                         icon: Icon(
                           controller.isPasswordVisible.value
-                              ? Icons.visibility_rounded
-                              : Icons.visibility_off_rounded,
+                              ? Icons.visibility_off_rounded
+                              : Icons.visibility_rounded,
                           size: 22.w,
                           color: AppColors.darkBlue,
                         ),

@@ -3,6 +3,7 @@ import 'package:little_flower_app/bindings/attendance_bindings.dart';
 import 'package:little_flower_app/bindings/auth_bindings.dart';
 import 'package:little_flower_app/bindings/dashboard_bindings.dart';
 import 'package:little_flower_app/bindings/guest_bindings.dart';
+import 'package:little_flower_app/bindings/school_info_bindings.dart';
 import 'package:little_flower_app/bindings/staff_management_bindings.dart';
 import 'package:little_flower_app/bindings/staff_signup_bindings.dart';
 import 'package:little_flower_app/bindings/student_bindings.dart';
@@ -14,6 +15,7 @@ import 'package:little_flower_app/views/auth_page.dart';
 import 'package:little_flower_app/views/dashboard_page.dart';
 import 'package:little_flower_app/views/guest_page.dart';
 import 'package:little_flower_app/views/profile_page.dart';
+import 'package:little_flower_app/views/school_info_page.dart';
 import 'package:little_flower_app/views/staff_management_page.dart';
 import 'package:little_flower_app/views/staff_signup_page.dart';
 import 'package:little_flower_app/views/students_page.dart';
@@ -28,6 +30,11 @@ class AppPages {
   static const TEST = Routes.TEST;
 
   static final routes = [
+    GetPage(
+      name: _Paths.INFO,
+      page: () => EditSchoolInfoScreen(),
+      binding: SchoolInfoBindings(),
+    ),
     GetPage(
       name: _Paths.PROFILE,
       page: () => ProfilePage(),
