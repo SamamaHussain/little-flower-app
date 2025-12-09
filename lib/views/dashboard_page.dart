@@ -29,61 +29,232 @@ class DashboardPage extends GetView<AuthController> {
               announcementsController.isLoading.value ||
               studentsController.isLoading.value;
 
-          return Stack(
-            children: [
-              SingleChildScrollView(
-                physics: isLoading
-                    ? NeverScrollableScrollPhysics()
-                    : BouncingScrollPhysics(),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Custom Top Section (replacing AppBar)
-                    _buildCustomTopBar(),
+          // Show full screen loading until everything is ready
+          if (isLoading) {
+            return _buildFullScreenLoading();
+          }
 
-                    Padding(
-                      padding: EdgeInsets.all(16.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // User Profile Section
-                          _buildUserProfileSection(
-                            authController,
-                            staffController,
-                          ),
-                          SizedBox(height: 24.h),
+          return SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Custom Top Section (replacing AppBar)
+                _buildCustomTopBar(),
 
-                          // Quick Overview with loading state
-                          _buildQuickOverview(
-                            studentsController,
-                            staffController,
-                          ),
-                          SizedBox(height: 24.h),
-
-                          // Live Announcements with loading state
-                          _buildLiveAnnouncements(announcementsController),
-                          SizedBox(height: 24.h),
-
-                          // Management Heading and Horizontal Tiles
-                          Text(
-                            'Management',
-                            style: TextStyle(
-                              fontSize: 18.sp,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF2D3748),
-                            ),
-                          ),
-                          SizedBox(height: 16.h),
-                          _buildManagementTiles(authController),
-                        ],
+                Padding(
+                  padding: EdgeInsets.all(16.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // User Profile Section
+                      _buildUserProfileSection(
+                        authController,
+                        staffController,
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 24.h),
+
+                      // Quick Overview
+                      _buildQuickOverview(
+                        studentsController,
+                        staffController,
+                      ),
+                      SizedBox(height: 24.h),
+
+                      // Live Announcements
+                      _buildLiveAnnouncements(announcementsController),
+                      SizedBox(height: 24.h),
+
+                      // Management Heading and Horizontal Tiles
+                      Text(
+                        'Management',
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF2D3748),
+                        ),
+                      ),
+                      SizedBox(height: 16.h),
+                      _buildManagementTiles(authController),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           );
         }),
+      ),
+    );
+  }
+
+  Widget _buildFullScreenLoading() {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      color: Color(0xFFF8F9FA),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Animated logo or icon
+          Container(
+            width: 100.w,
+            height: 100.w,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.darkBlue.withOpacity(0.1),
+                  blurRadius: 20,
+                  offset: Offset(0, 8),
+                ),
+              ],
+            ),
+            child: Center(
+              child: Image.asset(
+                'assets/icons/logo.png',
+                width: 60.w,
+                height: 60.w,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(
+                    Icons.school_rounded,
+                    size: 50.w,
+                    color: AppColors.darkBlue,
+                  );
+                },
+              ),
+            ),
+          ),
+          SizedBox(height: 32.h),
+          // Loading indicator
+          SizedBox(
+            width: 40.w,
+            height: 40.w,
+            child: CircularProgressIndicator(
+              strokeWidth: 3,
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.darkBlue),
+            ),
+          ),
+          SizedBox(height: 24.h),
+          // Loading text
+          Text(
+            'Loading Dashboard...',
+            style: TextStyle(
+              fontSize: 16.sp,
+              fontWeight: FontWeight.w500,
+              color: Color(0xFF718096),
+            ),
+          ),
+          SizedBox(height: 8.h),
+          Text(
+            'Please wait while we fetch your data',
+            style: TextStyle(
+              fontSize: 13.sp,
+              fontWeight: FontWeight.w400,
+              color: Color(0xFF94A3B8),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showLogoutConfirmationDialog(AuthController controller) {
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25.r),
+        ),
+        child: Container(
+          padding: EdgeInsets.all(24.w),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(25.r),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Logout icon
+              Container(
+                width: 60.w,
+                height: 60.w,
+                decoration: BoxDecoration(
+                  color: Colors.red.withOpacity(0.1),
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.logout_rounded,
+                  size: 32.w,
+                  color: Colors.red,
+                ),
+              ),
+              SizedBox(height: 16.h),
+
+              // Title
+              Text(
+                'Logout',
+                style: TextStyle(
+                  fontSize: 18.sp,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF2D3748),
+                ),
+              ),
+              SizedBox(height: 12.h),
+
+              // Message
+              Text(
+                'Are you sure you want to logout from your account?',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  color: Color(0xFF718096),
+                  height: 1.4,
+                ),
+              ),
+              SizedBox(height: 24.h),
+
+              // Buttons
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Get.back(),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Color(0xFF718096),
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        side: BorderSide(color: Color(0xFFE2E8F0)),
+                      ),
+                      child: Text('Cancel'),
+                    ),
+                  ),
+                  SizedBox(width: 12.w),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Get.back();
+                        controller.logout();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                      ),
+                      child: Text(
+                        'Logout',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -128,6 +299,7 @@ class DashboardPage extends GetView<AuthController> {
         children: [
           // Day and Date in Row
           Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 '$dayName,',
@@ -135,15 +307,20 @@ class DashboardPage extends GetView<AuthController> {
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w700,
                   color: Color(0xFF2D3748),
+                  height: 1,
                 ),
               ),
               SizedBox(width: 5.w),
-              Text(
-                dateStr,
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xFF718096),
+              Padding(
+                padding: EdgeInsets.only(bottom: 1.h),
+                child: Text(
+                  dateStr,
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF718096),
+                    height: 1,
+                  ),
                 ),
               ),
             ],
@@ -257,7 +434,7 @@ class DashboardPage extends GetView<AuthController> {
                   color: Colors.white,
                   onSelected: (value) {
                     if (value == 'logout') {
-                      controller.logout();
+                      _showLogoutConfirmationDialog(controller);
                     } else if (value == 'profile') {
                       Get.toNamed(Routes.PROFILE);
                     } else if (value == 'notifications') {
@@ -377,125 +554,91 @@ class DashboardPage extends GetView<AuthController> {
     AuthController authController,
     StaffController staffController,
   ) {
-    return Obx(() {
-      final isLoading = staffController.isLoading.value;
-
-      return Padding(
-        padding: EdgeInsets.only(top: 16.h),
-        child: Row(
-          children: [
-            // Profile Picture on Left
-            Container(
-              width: 80.w,
-              height: 80.h,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 8,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-              child: ClipOval(
-                child: isLoading
-                    ? Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Colors.grey[300],
-                        ),
-                        child: Icon(
-                          Icons.person_rounded,
-                          color: Colors.grey[500],
-                          size: 30.w,
-                        ),
-                      )
-                    : Image.network(
-                        'https://thumbs.dreamstime.com/b/profile-picture-caucasian-male-employee-posing-office-happy-young-worker-look-camera-workplace-headshot-portrait-smiling-190186649.jpg', // Replace with actual profile image URL
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  AppColors.darkBlue,
-                                  AppColors.darkBlue,
-                                ],
-                              ),
-                            ),
-                            child: Icon(
-                              Icons.person_rounded,
-                              color: Colors.white,
-                              size: 30.w,
-                            ),
-                          );
-                        },
+    return Padding(
+      padding: EdgeInsets.only(top: 16.h),
+      child: Row(
+        children: [
+          // Profile Picture on Left
+          Container(
+            width: 80.w,
+            height: 80.h,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 8,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: ClipOval(
+              child: Image.network(
+                'https://thumbs.dreamstime.com/b/profile-picture-caucasian-male-employee-posing-office-happy-young-worker-look-camera-workplace-headshot-portrait-smiling-190186649.jpg', // Replace with actual profile image URL
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      gradient: LinearGradient(
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                        colors: [
+                          AppColors.darkBlue,
+                          AppColors.darkBlue,
+                        ],
                       ),
-              ),
-            ),
-            SizedBox(width: 22.w),
-            // User Info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Welcome,',
-                    style: TextStyle(
-                      fontSize: 15.sp,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xFF718096),
                     ),
-                  ),
-                  SizedBox(height: 1.h),
-                  isLoading
-                      ? Container(
-                          width: 120.w,
-                          height: 20.h,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(4.r),
-                          ),
-                        )
-                      : Text(
-                          '${staffController.currentStaff.value?.firstName} ${staffController.currentStaff.value?.lastName}',
-                          style: TextStyle(
-                            fontSize: 20.sp,
-                            fontWeight: FontWeight.w700,
-                            color: Color(0xFF2D3748),
-                          ),
-                        ),
-                  SizedBox(height: 3.h),
-                  Container(height: 0.8, width: 120.w, color: Colors.black),
-                  SizedBox(height: 3.h),
-                  isLoading
-                      ? Container(
-                          width: 80.w,
-                          height: 16.h,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[300],
-                            borderRadius: BorderRadius.circular(4.r),
-                          ),
-                        )
-                      : Text(
-                          authController.isAdmin ? 'Principal' : 'Teacher',
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black,
-                          ),
-                        ),
-                ],
+                    child: Icon(
+                      Icons.person_rounded,
+                      color: Colors.white,
+                      size: 30.w,
+                    ),
+                  );
+                },
               ),
             ),
-          ],
-        ),
-      );
-    });
+          ),
+          SizedBox(width: 22.w),
+          // User Info
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Welcome,',
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF718096),
+                  ),
+                ),
+                SizedBox(height: 1.h),
+                Text(
+                  '${staffController.currentStaff.value?.firstName} ${staffController.currentStaff.value?.lastName}',
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF2D3748),
+                  ),
+                ),
+                SizedBox(height: 3.h),
+                Container(height: 0.8, width: 120.w, color: Colors.black),
+                SizedBox(height: 3.h),
+                Text(
+                  authController.isAdmin ? 'Principal' : 'Teacher',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget _buildLiveAnnouncements(AnnouncementsController controller) {
@@ -511,237 +654,131 @@ class DashboardPage extends GetView<AuthController> {
           ),
         ),
         SizedBox(height: 16.h),
-        Obx(() {
-          // Loading state
-          if (controller.isLoading.value) {
-            return _buildAnnouncementsLoading();
-          }
+        // Empty state
+        if (controller.announcements.isEmpty)
+          Container(
+            padding: EdgeInsets.all(25.w),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05),
+                  blurRadius: 10,
+                  offset: Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Center(
+              child: Text(
+                'No announcements available',
+                style: TextStyle(fontSize: 14.sp, color: Color(0xFF718096)),
+              ),
+            ),
+          )
+        else
+          // Show only the latest 3 announcements
+          ...controller.announcements.take(3).map((announcement) {
+            // Format date like in guest page
+            final months = [
+              'Jan',
+              'Feb',
+              'Mar',
+              'Apr',
+              'May',
+              'Jun',
+              'Jul',
+              'Aug',
+              'Sep',
+              'Oct',
+              'Nov',
+              'Dec',
+            ];
+            final dateStr =
+                '${announcement.date.day} ${months[announcement.date.month - 1]}';
 
-          // Empty state
-          if (controller.announcements.isEmpty) {
             return Container(
-              padding: EdgeInsets.all(25.w),
+              margin: EdgeInsets.only(bottom: 12.h),
+              padding: EdgeInsets.all(16.w),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16.r),
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
+                    blurRadius: 8,
                     offset: Offset(0, 2),
                   ),
                 ],
               ),
-              child: Center(
-                child: Text(
-                  'No announcements available',
-                  style: TextStyle(fontSize: 14.sp, color: Color(0xFF718096)),
-                ),
-              ),
-            );
-          }
-
-          // Show only the latest 3 announcements
-          final latestAnnouncements = controller.announcements.take(3).toList();
-
-          return Column(
-            children: latestAnnouncements.map((announcement) {
-              // Format date like in guest page
-              final months = [
-                'Jan',
-                'Feb',
-                'Mar',
-                'Apr',
-                'May',
-                'Jun',
-                'Jul',
-                'Aug',
-                'Sep',
-                'Oct',
-                'Nov',
-                'Dec',
-              ];
-              final dateStr =
-                  '${announcement.date.day} ${months[announcement.date.month - 1]}';
-
-              return Container(
-                margin: EdgeInsets.only(bottom: 12.h),
-                padding: EdgeInsets.all(16.w),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(16.r),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
-                      blurRadius: 8,
-                      offset: Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Top row with icon and date in same background container
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 10.w,
-                        vertical: 6.h,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.yellow.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(12.r),
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // Small icon
-                          Icon(
-                            Icons.campaign_rounded,
-                            color: AppColors.darkBlue,
-                            size: 14.w,
-                          ),
-                          SizedBox(width: 6.w),
-                          // Date
-                          Text(
-                            dateStr,
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: AppColors.darkBlue,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 12.h),
-                    // Title
-                    Text(
-                      announcement.title,
-                      style: TextStyle(
-                        fontSize: 17.sp,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF2D3748),
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    SizedBox(height: 8.h),
-                    // Divider for separation
-                    Container(height: 1.h, color: Color(0xFFE2E8F0)),
-                    SizedBox(height: 8.h),
-                    // Content
-                    Text(
-                      announcement.content,
-                      style: TextStyle(
-                        fontSize: 15.sp,
-                        fontWeight: FontWeight.w400,
-                        color: Color(0xFF2D3748),
-                        height: 1.4,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
-                ),
-              );
-            }).toList(),
-          );
-        }),
-      ],
-    );
-  }
-
-  Widget _buildAnnouncementsLoading() {
-    return Column(
-      children: List.generate(3, (index) {
-        return Container(
-          margin: EdgeInsets.only(bottom: 12.h),
-          padding: EdgeInsets.all(16.w),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16.r),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05),
-                blurRadius: 8,
-                offset: Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Loading header
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Container(
-                      width: 14.w,
-                      height: 14.w,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    SizedBox(width: 6.w),
-                    Container(
-                      width: 40.w,
-                      height: 12.h,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(4.r),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(height: 12.h),
-              // Loading title
-              Container(
-                width: double.infinity,
-                height: 20.h,
-                decoration: BoxDecoration(
-                  color: Colors.grey[200],
-                  borderRadius: BorderRadius.circular(4.r),
-                ),
-              ),
-              SizedBox(height: 8.h),
-              // Divider
-              Container(height: 1.h, color: Color(0xFFE2E8F0)),
-              SizedBox(height: 8.h),
-              // Loading content
-              Column(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Top row with icon and date in same background container
                   Container(
-                    width: double.infinity,
-                    height: 16.h,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 10.w,
+                      vertical: 6.h,
+                    ),
                     decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(4.r),
+                      color: AppColors.yellow.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(12.r),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // Small icon
+                        Icon(
+                          Icons.campaign_rounded,
+                          color: AppColors.darkBlue,
+                          size: 14.w,
+                        ),
+                        SizedBox(width: 6.w),
+                        // Date
+                        Text(
+                          dateStr,
+                          style: TextStyle(
+                            fontSize: 12.sp,
+                            color: AppColors.darkBlue,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                  SizedBox(height: 4.h),
-                  Container(
-                    width: 200.w,
-                    height: 16.h,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(4.r),
+                  SizedBox(height: 12.h),
+                  // Title
+                  Text(
+                    announcement.title,
+                    style: TextStyle(
+                      fontSize: 17.sp,
+                      fontWeight: FontWeight.w700,
+                      color: Color(0xFF2D3748),
                     ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 8.h),
+                  // Divider for separation
+                  Container(height: 1.h, color: Color(0xFFE2E8F0)),
+                  SizedBox(height: 8.h),
+                  // Content
+                  Text(
+                    announcement.content,
+                    style: TextStyle(
+                      fontSize: 15.sp,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xFF2D3748),
+                      height: 1.4,
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
-            ],
-          ),
-        );
-      }),
+            );
+          }),
+      ],
     );
   }
 
@@ -749,100 +786,32 @@ class DashboardPage extends GetView<AuthController> {
     StudentsController studentsController,
     StaffController staffController,
   ) {
-    return Obx(() {
-      final bool isLoading =
-          studentsController.isLoading.value || staffController.isLoading.value;
+    // Get real data from controllers
+    final activeStudents = studentsController.students
+        .where((s) => s.isActive)
+        .length;
+    final totalStaff = staffController.staffList.length;
 
-      // Get real data from controllers
-      // final totalStudents = studentsController.students.length;
-      final activeStudents = studentsController.students
-          .where((s) => s.isActive)
-          .length;
-      final totalStaff = staffController.staffList.length;
-
-      return Row(
-        children: [
-          Expanded(
-            child: isLoading
-                ? _buildOverviewCardLoading(AppColors.pink)
-                : _buildOverviewCard(
-                    'Total Students',
-                    activeStudents.toString(),
-                    'assets/icons/students.png',
-                    AppColors.pink,
-                  ),
+    return Row(
+      children: [
+        Expanded(
+          child: _buildOverviewCard(
+            'Total Students',
+            activeStudents.toString(),
+            'assets/icons/students.png',
+            AppColors.pink,
           ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: isLoading
-                ? _buildOverviewCardLoading(AppColors.lightBlue)
-                : _buildOverviewCard(
-                    'Teaching Staff',
-                    totalStaff.toString(),
-                    'assets/icons/staff.png',
-                    AppColors.lightBlue,
-                  ),
-          ),
-        ],
-      );
-    });
-  }
-
-  Widget _buildOverviewCardLoading(Color backgroundColor) {
-    return Container(
-      padding: EdgeInsets.all(20.w),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [backgroundColor.withOpacity(0.4), backgroundColor],
         ),
-        borderRadius: BorderRadius.circular(20.r),
-        border: Border.all(color: backgroundColor.withOpacity(0.2), width: 1),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: EdgeInsets.all(12.w),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.8),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Container(
-                  width: 22.w,
-                  height: 22.w,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(6.r),
-                  ),
-                ),
-              ),
-            ],
+        SizedBox(width: 12.w),
+        Expanded(
+          child: _buildOverviewCard(
+            'Teaching Staff',
+            totalStaff.toString(),
+            'assets/icons/staff.png',
+            AppColors.lightBlue,
           ),
-          SizedBox(height: 16.h),
-          Container(
-            width: 60.w,
-            height: 28.h,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.8),
-              borderRadius: BorderRadius.circular(6.r),
-            ),
-          ),
-          SizedBox(height: 4.h),
-          Container(
-            width: 100.w,
-            height: 14.h,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.8),
-              borderRadius: BorderRadius.circular(4.r),
-            ),
-          ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

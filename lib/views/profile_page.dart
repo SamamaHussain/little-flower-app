@@ -618,26 +618,53 @@ class ProfilePage extends GetView<AuthController> {
       return;
     }
 
-    // Show loading
+    // Show loading dialog
     Get.dialog(
-      Center(child: CircularProgressIndicator(color: AppColors.darkBlue)),
+      PopScope(
+        canPop: false,
+        child: Center(
+          child: Container(
+            padding: EdgeInsets.all(24.w),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16.r),
+            ),
+            child: CircularProgressIndicator(color: AppColors.darkBlue),
+          ),
+        ),
+      ),
       barrierDismissible: false,
     );
 
-    await staffController.updateStaff(staff.uid, firstName, lastName);
-    await staffController.fetchCurrentStaff();
+    try {
+      await staffController.updateStaffProfile(staff.uid, firstName, lastName);
 
-    // Close loading
-    if (Get.isDialogOpen ?? false) Get.back();
+      // Close dialog first before any UI updates
+      if (Get.isDialogOpen ?? false) Get.back();
 
-    isEditing.value = false;
+      // Update text controllers with new values
+      firstNameController.text = firstName;
+      lastNameController.text = lastName;
 
-    Get.snackbar(
-      "Success",
-      "Profile updated successfully",
-      backgroundColor: AppColors.green,
-      colorText: Colors.white,
-    );
+      isEditing.value = false;
+
+      Get.snackbar(
+        "Success",
+        "Profile updated successfully",
+        backgroundColor: AppColors.green,
+        colorText: Colors.white,
+      );
+    } catch (e) {
+      // Close dialog on error
+      if (Get.isDialogOpen ?? false) Get.back();
+
+      Get.snackbar(
+        "Error",
+        "Failed to update profile",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
   }
 
   void _showChangePasswordDialog() {

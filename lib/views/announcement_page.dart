@@ -721,120 +721,126 @@ class AnnouncementsAdminPage extends GetView<AnnouncementsController> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25.r),
         ),
+        insetPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
         child: Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(Get.context!).size.height * 0.85,
+          ),
           padding: EdgeInsets.all(24.w),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(25.r),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Create Announcement',
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF2D3748),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Create Announcement',
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF2D3748),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.close_rounded, size: 20.w),
+                      onPressed: () => Get.back(),
+                      color: Color(0xFF718096),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20.h),
+
+                // Title field
+                Text(
+                  'Title',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF2D3748),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFFF8F9FA),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: TextField(
+                    controller: titleController,
+                    decoration: InputDecoration(
+                      hintText: 'Enter announcement title',
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.all(16.w),
+                    ),
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
+                SizedBox(height: 16.h),
+
+                // Content field
+                Text(
+                  'Content',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF2D3748),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFFF8F9FA),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: TextField(
+                    controller: contentController,
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                      hintText: 'Enter announcement content',
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.all(16.w),
+                    ),
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
+                SizedBox(height: 24.h),
+
+                // Create button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (titleController.text.isNotEmpty &&
+                          contentController.text.isNotEmpty) {
+                        controller.createAnnouncement(
+                          titleController.text,
+                          contentController.text,
+                        );
+                        Get.back();
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.darkBlue,
+                      padding: EdgeInsets.symmetric(vertical: 14.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                    ),
+                    child: Text(
+                      'Create Announcement',
+                      style: TextStyle(fontSize: 14.sp, color: Colors.white),
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.close_rounded, size: 20.w),
-                    onPressed: () => Get.back(),
-                    color: Color(0xFF718096),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20.h),
-
-              // Title field
-              Text(
-                'Title',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF2D3748),
                 ),
-              ),
-              SizedBox(height: 8.h),
-              Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFFF8F9FA),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: TextField(
-                  controller: titleController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter announcement title',
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.all(16.w),
-                  ),
-                  style: TextStyle(fontSize: 14.sp),
-                ),
-              ),
-              SizedBox(height: 16.h),
-
-              // Content field
-              Text(
-                'Content',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF2D3748),
-                ),
-              ),
-              SizedBox(height: 8.h),
-              Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFFF8F9FA),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: TextField(
-                  controller: contentController,
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                    hintText: 'Enter announcement content',
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.all(16.w),
-                  ),
-                  style: TextStyle(fontSize: 14.sp),
-                ),
-              ),
-              SizedBox(height: 24.h),
-
-              // Create button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (titleController.text.isNotEmpty &&
-                        contentController.text.isNotEmpty) {
-                      controller.createAnnouncement(
-                        titleController.text,
-                        contentController.text,
-                      );
-                      Get.back();
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.darkBlue,
-                    padding: EdgeInsets.symmetric(vertical: 14.h),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                  ),
-                  child: Text(
-                    'Create Announcement',
-                    style: TextStyle(fontSize: 14.sp, color: Colors.white),
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -850,121 +856,127 @@ class AnnouncementsAdminPage extends GetView<AnnouncementsController> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25.r),
         ),
+        insetPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
         child: Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(Get.context!).size.height * 0.85,
+          ),
           padding: EdgeInsets.all(24.w),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(25.r),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Edit Announcement',
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF2D3748),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Edit Announcement',
+                      style: TextStyle(
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w700,
+                        color: Color(0xFF2D3748),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.close_rounded, size: 20.w),
+                      onPressed: () => Get.back(),
+                      color: Color(0xFF718096),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20.h),
+
+                // Title field
+                Text(
+                  'Title',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF2D3748),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFFF8F9FA),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: TextField(
+                    controller: titleController,
+                    decoration: InputDecoration(
+                      hintText: 'Enter announcement title',
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.all(16.w),
+                    ),
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
+                SizedBox(height: 16.h),
+
+                // Content field
+                Text(
+                  'Content',
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    color: Color(0xFF2D3748),
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xFFF8F9FA),
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: TextField(
+                    controller: contentController,
+                    maxLines: 5,
+                    decoration: InputDecoration(
+                      hintText: 'Enter announcement content',
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.all(16.w),
+                    ),
+                    style: TextStyle(fontSize: 14.sp),
+                  ),
+                ),
+                SizedBox(height: 24.h),
+
+                // Update button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (titleController.text.isNotEmpty &&
+                          contentController.text.isNotEmpty) {
+                        controller.updateAnnouncement(
+                          announcement.id!,
+                          titleController.text,
+                          contentController.text,
+                        );
+                        Get.back();
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.darkBlue,
+                      padding: EdgeInsets.symmetric(vertical: 14.h),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12.r),
+                      ),
+                    ),
+                    child: Text(
+                      'Update Announcement',
+                      style: TextStyle(fontSize: 14.sp, color: Colors.white),
                     ),
                   ),
-                  IconButton(
-                    icon: Icon(Icons.close_rounded, size: 20.w),
-                    onPressed: () => Get.back(),
-                    color: Color(0xFF718096),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20.h),
-
-              // Title field
-              Text(
-                'Title',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF2D3748),
                 ),
-              ),
-              SizedBox(height: 8.h),
-              Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFFF8F9FA),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: TextField(
-                  controller: titleController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter announcement title',
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.all(16.w),
-                  ),
-                  style: TextStyle(fontSize: 14.sp),
-                ),
-              ),
-              SizedBox(height: 16.h),
-
-              // Content field
-              Text(
-                'Content',
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                  color: Color(0xFF2D3748),
-                ),
-              ),
-              SizedBox(height: 8.h),
-              Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFFF8F9FA),
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: TextField(
-                  controller: contentController,
-                  maxLines: 5,
-                  decoration: InputDecoration(
-                    hintText: 'Enter announcement content',
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.all(16.w),
-                  ),
-                  style: TextStyle(fontSize: 14.sp),
-                ),
-              ),
-              SizedBox(height: 24.h),
-
-              // Update button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (titleController.text.isNotEmpty &&
-                        contentController.text.isNotEmpty) {
-                      controller.updateAnnouncement(
-                        announcement.id!,
-                        titleController.text,
-                        contentController.text,
-                      );
-                      Get.back();
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.darkBlue,
-                    padding: EdgeInsets.symmetric(vertical: 14.h),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12.r),
-                    ),
-                  ),
-                  child: Text(
-                    'Update Announcement',
-                    style: TextStyle(fontSize: 14.sp, color: Colors.white),
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

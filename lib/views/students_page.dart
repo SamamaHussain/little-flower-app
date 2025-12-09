@@ -818,260 +818,266 @@ class StudentsView extends GetView<StudentsController> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.r),
             ),
+            insetPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
             child: Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.85,
+              ),
               padding: EdgeInsets.all(20.w),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Add New Student',
-                        style: TextStyle(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF2D3748),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Add New Student',
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF2D3748),
+                          ),
                         ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.close_rounded, size: 20.w),
-                        onPressed: () => Get.back(),
-                        padding: EdgeInsets.zero,
-                        constraints: BoxConstraints(),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20.h),
-
-                  _buildTextFieldWithValidation(
-                    controller: nameController,
-                    label: 'Student Name',
-                    hintText: 'Enter student name',
-                    allowSpaces: true,
-                    maxLength: 50,
-                  ),
-                  SizedBox(height: 16.h),
-
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Grade',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF2D3748),
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.grey.withOpacity(0.3),
-                                ),
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton<String>(
-                                  value: selectedGrade,
-                                  isExpanded: true,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 12.w,
-                                  ),
-                                  icon: Icon(
-                                    Icons.arrow_drop_down_rounded,
-                                    color: Color(0xFF718096),
-                                  ),
-                                  items:
-                                      List.generate(
-                                        12,
-                                        (index) => (index + 1).toString(),
-                                      ).map((String grade) {
-                                        return DropdownMenuItem(
-                                          value: grade,
-                                          child: Text('Grade $grade'),
-                                        );
-                                      }).toList(),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selectedGrade = newValue!;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
+                        IconButton(
+                          icon: Icon(Icons.close_rounded, size: 20.w),
+                          onPressed: () => Get.back(),
+                          padding: EdgeInsets.zero,
+                          constraints: BoxConstraints(),
                         ),
-                      ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Section',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF2D3748),
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.grey.withOpacity(0.3),
-                                ),
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton<String>(
-                                  value: selectedSection,
-                                  isExpanded: true,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 12.w,
-                                  ),
-                                  icon: Icon(
-                                    Icons.arrow_drop_down_rounded,
-                                    color: Color(0xFF718096),
-                                  ),
-                                  items: ['A', 'B', 'C', 'D'].map((
-                                    String section,
-                                  ) {
-                                    return DropdownMenuItem(
-                                      value: section,
-                                      child: Text('Section $section'),
-                                    );
-                                  }).toList(),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selectedSection = newValue!;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16.h),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
 
-                  _buildTextFieldWithValidation(
-                    controller: rollNumberController,
-                    label: 'Roll Number',
-                    hintText: 'Enter roll number',
-                    allowSpaces: false,
-                    numbersOnly: true,
-                    maxLength: 3,
-                  ),
-                  SizedBox(height: 16.h),
+                    _buildTextFieldWithValidation(
+                      controller: nameController,
+                      label: 'Student Name',
+                      hintText: 'Enter student name',
+                      allowSpaces: true,
+                      maxLength: 50,
+                    ),
+                    SizedBox(height: 16.h),
 
-                  _buildTextFieldWithValidation(
-                    controller: parentNameController,
-                    label: 'Parent Name',
-                    hintText: 'Enter parent name',
-                    allowSpaces: true,
-                    maxLength: 50,
-                  ),
-
-                  SizedBox(height: 24.h),
-                  Obx(
-                    () => controller.isLoading.value
-                        ? Center(
-                            child: CircularProgressIndicator(
-                              color: AppColors.darkBlue,
-                            ),
-                          )
-                        : Row(
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                child: OutlinedButton(
-                                  onPressed: () => Get.back(),
-                                  style: OutlinedButton.styleFrom(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 14.h,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12.r),
-                                    ),
-                                    side: BorderSide(color: AppColors.darkBlue),
-                                  ),
-                                  child: Text(
-                                    'Cancel',
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: AppColors.darkBlue,
-                                    ),
-                                  ),
+                              Text(
+                                'Grade',
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF2D3748),
                                 ),
                               ),
-                              SizedBox(width: 12.w),
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    if (_validateForm(
-                                      nameController.text,
-                                      rollNumberController.text,
-                                      parentNameController.text,
-                                    )) {
-                                      final student = Student(
-                                        name: nameController.text.trim(),
-                                        grade: selectedGrade,
-                                        section: selectedSection,
-                                        rollNumber: rollNumberController.text
-                                            .trim(),
-                                        parentName: parentNameController.text
-                                            .trim(),
-                                        isActive: true,
-                                      );
-
-                                      final validationError = student
-                                          .validate();
-                                      if (validationError != null) {
-                                        Get.snackbar(
-                                          'Error',
-                                          validationError,
-                                          snackPosition: SnackPosition.BOTTOM,
-                                          backgroundColor: Colors.red,
-                                          colorText: Colors.white,
-                                        );
-                                        return;
-                                      }
-
-                                      controller.addStudent(student);
-                                      Get.back();
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.darkBlue,
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 14.h,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12.r),
-                                    ),
+                              SizedBox(height: 8.h),
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey.withOpacity(0.3),
                                   ),
-                                  child: Text(
-                                    'Add Student',
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
+                                  borderRadius: BorderRadius.circular(12.r),
+                                ),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton<String>(
+                                    value: selectedGrade,
+                                    isExpanded: true,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 12.w,
                                     ),
+                                    icon: Icon(
+                                      Icons.arrow_drop_down_rounded,
+                                      color: Color(0xFF718096),
+                                    ),
+                                    items:
+                                        List.generate(
+                                          12,
+                                          (index) => (index + 1).toString(),
+                                        ).map((String grade) {
+                                          return DropdownMenuItem(
+                                            value: grade,
+                                            child: Text('Grade $grade'),
+                                          );
+                                        }).toList(),
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        selectedGrade = newValue!;
+                                      });
+                                    },
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                  ),
-                ],
+                        ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Section',
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF2D3748),
+                                ),
+                              ),
+                              SizedBox(height: 8.h),
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey.withOpacity(0.3),
+                                  ),
+                                  borderRadius: BorderRadius.circular(12.r),
+                                ),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton<String>(
+                                    value: selectedSection,
+                                    isExpanded: true,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 12.w,
+                                    ),
+                                    icon: Icon(
+                                      Icons.arrow_drop_down_rounded,
+                                      color: Color(0xFF718096),
+                                    ),
+                                    items: ['A', 'B', 'C', 'D'].map((
+                                      String section,
+                                    ) {
+                                      return DropdownMenuItem(
+                                        value: section,
+                                        child: Text('Section $section'),
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        selectedSection = newValue!;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.h),
+
+                    _buildTextFieldWithValidation(
+                      controller: rollNumberController,
+                      label: 'Roll Number',
+                      hintText: 'Enter roll number',
+                      allowSpaces: false,
+                      numbersOnly: true,
+                      maxLength: 3,
+                    ),
+                    SizedBox(height: 16.h),
+
+                    _buildTextFieldWithValidation(
+                      controller: parentNameController,
+                      label: 'Parent Name',
+                      hintText: 'Enter parent name',
+                      allowSpaces: true,
+                      maxLength: 50,
+                    ),
+
+                    SizedBox(height: 24.h),
+                    Obx(
+                      () => controller.isLoading.value
+                          ? Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.darkBlue,
+                              ),
+                            )
+                          : Row(
+                              children: [
+                                Expanded(
+                                  child: OutlinedButton(
+                                    onPressed: () => Get.back(),
+                                    style: OutlinedButton.styleFrom(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 14.h,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12.r),
+                                      ),
+                                      side: BorderSide(color: AppColors.darkBlue),
+                                    ),
+                                    child: Text(
+                                      'Cancel',
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: AppColors.darkBlue,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 12.w),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      if (_validateForm(
+                                        nameController.text,
+                                        rollNumberController.text,
+                                        parentNameController.text,
+                                      )) {
+                                        final student = Student(
+                                          name: nameController.text.trim(),
+                                          grade: selectedGrade,
+                                          section: selectedSection,
+                                          rollNumber: rollNumberController.text
+                                              .trim(),
+                                          parentName: parentNameController.text
+                                              .trim(),
+                                          isActive: true,
+                                        );
+
+                                        final validationError = student
+                                            .validate();
+                                        if (validationError != null) {
+                                          Get.snackbar(
+                                            'Error',
+                                            validationError,
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            backgroundColor: Colors.red,
+                                            colorText: Colors.white,
+                                          );
+                                          return;
+                                        }
+
+                                        controller.addStudent(student);
+                                        Get.back();
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.darkBlue,
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 14.h,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12.r),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Add Student',
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -1208,264 +1214,270 @@ class StudentsView extends GetView<StudentsController> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20.r),
             ),
+            insetPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
             child: Container(
+              constraints: BoxConstraints(
+                maxHeight: MediaQuery.of(context).size.height * 0.85,
+              ),
               padding: EdgeInsets.all(20.w),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        'Edit Student',
-                        style: TextStyle(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFF2D3748),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Edit Student',
+                          style: TextStyle(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFF2D3748),
+                          ),
                         ),
-                      ),
-                      IconButton(
-                        icon: Icon(Icons.close_rounded, size: 20.w),
-                        onPressed: () => Get.back(),
-                        padding: EdgeInsets.zero,
-                        constraints: BoxConstraints(),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 20.h),
-
-                  _buildTextFieldWithValidation(
-                    controller: nameController,
-                    label: 'Student Name',
-                    hintText: 'Enter student name',
-                    allowSpaces: true,
-                    maxLength: 50,
-                  ),
-                  SizedBox(height: 16.h),
-
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Grade',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF2D3748),
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.grey.withOpacity(0.3),
-                                ),
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton<String>(
-                                  value: selectedGrade,
-                                  isExpanded: true,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 12.w,
-                                  ),
-                                  icon: Icon(
-                                    Icons.arrow_drop_down_rounded,
-                                    color: Color(0xFF718096),
-                                  ),
-                                  items:
-                                      List.generate(
-                                        12,
-                                        (index) => (index + 1).toString(),
-                                      ).map((String grade) {
-                                        return DropdownMenuItem(
-                                          value: grade,
-                                          child: Text('Grade $grade'),
-                                        );
-                                      }).toList(),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selectedGrade = newValue!;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
+                        IconButton(
+                          icon: Icon(Icons.close_rounded, size: 20.w),
+                          onPressed: () => Get.back(),
+                          padding: EdgeInsets.zero,
+                          constraints: BoxConstraints(),
                         ),
-                      ),
-                      SizedBox(width: 12.w),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Section',
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFF2D3748),
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            Container(
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.grey.withOpacity(0.3),
-                                ),
-                                borderRadius: BorderRadius.circular(12.r),
-                              ),
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton<String>(
-                                  value: selectedSection,
-                                  isExpanded: true,
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: 12.w,
-                                  ),
-                                  icon: Icon(
-                                    Icons.arrow_drop_down_rounded,
-                                    color: Color(0xFF718096),
-                                  ),
-                                  items: ['A', 'B', 'C', 'D'].map((
-                                    String section,
-                                  ) {
-                                    return DropdownMenuItem(
-                                      value: section,
-                                      child: Text('Section $section'),
-                                    );
-                                  }).toList(),
-                                  onChanged: (String? newValue) {
-                                    setState(() {
-                                      selectedSection = newValue!;
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 16.h),
+                      ],
+                    ),
+                    SizedBox(height: 20.h),
 
-                  _buildTextFieldWithValidation(
-                    controller: rollNumberController,
-                    label: 'Roll Number',
-                    hintText: 'Enter roll number',
-                    allowSpaces: false,
-                    numbersOnly: true,
-                    maxLength: 3,
-                  ),
-                  SizedBox(height: 16.h),
+                    _buildTextFieldWithValidation(
+                      controller: nameController,
+                      label: 'Student Name',
+                      hintText: 'Enter student name',
+                      allowSpaces: true,
+                      maxLength: 50,
+                    ),
+                    SizedBox(height: 16.h),
 
-                  _buildTextFieldWithValidation(
-                    controller: parentNameController,
-                    label: 'Parent Name',
-                    hintText: 'Enter parent name',
-                    allowSpaces: true,
-                    maxLength: 50,
-                  ),
-
-                  SizedBox(height: 24.h),
-                  Obx(
-                    () => controller.isLoading.value
-                        ? Center(
-                            child: CircularProgressIndicator(
-                              color: AppColors.darkBlue,
-                            ),
-                          )
-                        : Row(
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Expanded(
-                                child: OutlinedButton(
-                                  onPressed: () => Get.back(),
-                                  style: OutlinedButton.styleFrom(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 14.h,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12.r),
-                                    ),
-                                    side: BorderSide(color: AppColors.darkBlue),
-                                  ),
-                                  child: Text(
-                                    'Cancel',
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: AppColors.darkBlue,
-                                    ),
-                                  ),
+                              Text(
+                                'Grade',
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF2D3748),
                                 ),
                               ),
-                              SizedBox(width: 12.w),
-                              Expanded(
-                                child: ElevatedButton(
-                                  onPressed: () {
-                                    if (_validateForm(
-                                      nameController.text,
-                                      rollNumberController.text,
-                                      parentNameController.text,
-                                    )) {
-                                      final updatedStudent = student.copyWith(
-                                        name: nameController.text.trim(),
-                                        grade: selectedGrade,
-                                        section: selectedSection,
-                                        rollNumber: rollNumberController.text
-                                            .trim(),
-                                        parentName: parentNameController.text
-                                            .trim(),
-                                      );
-
-                                      final validationError = updatedStudent
-                                          .validate();
-                                      if (validationError != null) {
-                                        Get.snackbar(
-                                          'Error',
-                                          validationError,
-                                          snackPosition: SnackPosition.BOTTOM,
-                                          backgroundColor: Colors.red,
-                                          colorText: Colors.white,
-                                        );
-                                        return;
-                                      }
-
-                                      if (student.id != null) {
-                                        controller.updateStudent(
-                                          student.id!,
-                                          updatedStudent,
-                                        );
-                                      }
-                                      Get.back();
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.darkBlue,
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: 14.h,
-                                    ),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12.r),
-                                    ),
+                              SizedBox(height: 8.h),
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey.withOpacity(0.3),
                                   ),
-                                  child: Text(
-                                    'Update Student',
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
+                                  borderRadius: BorderRadius.circular(12.r),
+                                ),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton<String>(
+                                    value: selectedGrade,
+                                    isExpanded: true,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 12.w,
                                     ),
+                                    icon: Icon(
+                                      Icons.arrow_drop_down_rounded,
+                                      color: Color(0xFF718096),
+                                    ),
+                                    items:
+                                        List.generate(
+                                          12,
+                                          (index) => (index + 1).toString(),
+                                        ).map((String grade) {
+                                          return DropdownMenuItem(
+                                            value: grade,
+                                            child: Text('Grade $grade'),
+                                          );
+                                        }).toList(),
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        selectedGrade = newValue!;
+                                      });
+                                    },
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                  ),
-                ],
+                        ),
+                        SizedBox(width: 12.w),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Section',
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w600,
+                                  color: Color(0xFF2D3748),
+                                ),
+                              ),
+                              SizedBox(height: 8.h),
+                              Container(
+                                decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey.withOpacity(0.3),
+                                  ),
+                                  borderRadius: BorderRadius.circular(12.r),
+                                ),
+                                child: DropdownButtonHideUnderline(
+                                  child: DropdownButton<String>(
+                                    value: selectedSection,
+                                    isExpanded: true,
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 12.w,
+                                    ),
+                                    icon: Icon(
+                                      Icons.arrow_drop_down_rounded,
+                                      color: Color(0xFF718096),
+                                    ),
+                                    items: ['A', 'B', 'C', 'D'].map((
+                                      String section,
+                                    ) {
+                                      return DropdownMenuItem(
+                                        value: section,
+                                        child: Text('Section $section'),
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        selectedSection = newValue!;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16.h),
+
+                    _buildTextFieldWithValidation(
+                      controller: rollNumberController,
+                      label: 'Roll Number',
+                      hintText: 'Enter roll number',
+                      allowSpaces: false,
+                      numbersOnly: true,
+                      maxLength: 3,
+                    ),
+                    SizedBox(height: 16.h),
+
+                    _buildTextFieldWithValidation(
+                      controller: parentNameController,
+                      label: 'Parent Name',
+                      hintText: 'Enter parent name',
+                      allowSpaces: true,
+                      maxLength: 50,
+                    ),
+
+                    SizedBox(height: 24.h),
+                    Obx(
+                      () => controller.isLoading.value
+                          ? Center(
+                              child: CircularProgressIndicator(
+                                color: AppColors.darkBlue,
+                              ),
+                            )
+                          : Row(
+                              children: [
+                                Expanded(
+                                  child: OutlinedButton(
+                                    onPressed: () => Get.back(),
+                                    style: OutlinedButton.styleFrom(
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 14.h,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12.r),
+                                      ),
+                                      side: BorderSide(color: AppColors.darkBlue),
+                                    ),
+                                    child: Text(
+                                      'Cancel',
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: AppColors.darkBlue,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 12.w),
+                                Expanded(
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      if (_validateForm(
+                                        nameController.text,
+                                        rollNumberController.text,
+                                        parentNameController.text,
+                                      )) {
+                                        final updatedStudent = student.copyWith(
+                                          name: nameController.text.trim(),
+                                          grade: selectedGrade,
+                                          section: selectedSection,
+                                          rollNumber: rollNumberController.text
+                                              .trim(),
+                                          parentName: parentNameController.text
+                                              .trim(),
+                                        );
+
+                                        final validationError = updatedStudent
+                                            .validate();
+                                        if (validationError != null) {
+                                          Get.snackbar(
+                                            'Error',
+                                            validationError,
+                                            snackPosition: SnackPosition.BOTTOM,
+                                            backgroundColor: Colors.red,
+                                            colorText: Colors.white,
+                                          );
+                                          return;
+                                        }
+
+                                        if (student.id != null) {
+                                          controller.updateStudent(
+                                            student.id!,
+                                            updatedStudent,
+                                          );
+                                        }
+                                        Get.back();
+                                      }
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: AppColors.darkBlue,
+                                      padding: EdgeInsets.symmetric(
+                                        vertical: 14.h,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12.r),
+                                      ),
+                                    ),
+                                    child: Text(
+                                      'Update Student',
+                                      style: TextStyle(
+                                        fontSize: 14.sp,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                    ),
+                  ],
+                ),
               ),
             ),
           );

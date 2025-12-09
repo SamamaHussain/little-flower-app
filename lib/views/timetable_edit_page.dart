@@ -626,177 +626,183 @@ class EditTimetableScreen extends GetView<TimetableController> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(25.r),
         ),
+        insetPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
         child: Container(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(Get.context!).size.height * 0.8,
+          ),
           padding: EdgeInsets.all(20.w),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(25.r),
           ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    isBreak ? 'Edit Break' : 'Edit Time Slot',
-                    style: TextStyle(
-                      fontSize: 18.sp,
-                      fontWeight: FontWeight.w700,
-                      color: Color(0xFF2D3748),
-                    ),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.close_rounded, size: 20.w),
-                    onPressed: () => Get.back(),
-                    padding: EdgeInsets.zero,
-                    constraints: BoxConstraints(),
-                  ),
-                ],
-              ),
-              SizedBox(height: 20.h),
-
-              // Break Toggle
-              Container(
-                padding: EdgeInsets.all(12.w),
-                decoration: BoxDecoration(
-                  color: Colors.grey[50],
-                  borderRadius: BorderRadius.circular(12.r),
-                ),
-                child: Row(
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Switch(
-                      value: isBreak,
-                      onChanged: (value) {
-                        isBreak = value;
-                        Get.back();
-                        _showEditTimeSlotDialog(
-                          timeSlot.copyWith(isBreak: value),
-                        );
-                      },
-                      activeColor: AppColors.yellow,
-                    ),
-                    SizedBox(width: 8.w),
                     Text(
-                      'Mark as Break Period',
+                      isBreak ? 'Edit Break' : 'Edit Time Slot',
                       style: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w600,
+                        fontSize: 18.sp,
+                        fontWeight: FontWeight.w700,
                         color: Color(0xFF2D3748),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(Icons.close_rounded, size: 20.w),
+                      onPressed: () => Get.back(),
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20.h),
+
+                // Break Toggle
+                Container(
+                  padding: EdgeInsets.all(12.w),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[50],
+                    borderRadius: BorderRadius.circular(12.r),
+                  ),
+                  child: Row(
+                    children: [
+                      Switch(
+                        value: isBreak,
+                        onChanged: (value) {
+                          isBreak = value;
+                          Get.back();
+                          _showEditTimeSlotDialog(
+                            timeSlot.copyWith(isBreak: value),
+                          );
+                        },
+                        activeColor: AppColors.yellow,
+                      ),
+                      SizedBox(width: 8.w),
+                      Text(
+                        'Mark as Break Period',
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w600,
+                          color: Color(0xFF2D3748),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 16.h),
+
+                if (!isBreak) ...[
+                  // Subject Field
+                  _buildTextField(
+                    controller: subjectController,
+                    label: 'Subject',
+                    hintText: 'Enter subject name',
+                  ),
+                  SizedBox(height: 16.h),
+
+                  // Teacher Field
+                  _buildTextField(
+                    controller: teacherController,
+                    label: 'Teacher',
+                    hintText: 'Enter teacher name',
+                  ),
+                  SizedBox(height: 16.h),
+                ] else ...[
+                  // Break Title Field
+                  _buildTextField(
+                    controller: breakTitleController,
+                    label: 'Break Title',
+                    hintText: 'e.g., Lunch Break, Short Break',
+                  ),
+                  SizedBox(height: 16.h),
+                ],
+
+                // Time Fields in Row
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildTextField(
+                        controller: startTimeController,
+                        label: 'Start Time',
+                        hintText: '09:00 AM',
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
+                    Expanded(
+                      child: _buildTextField(
+                        controller: endTimeController,
+                        label: 'End Time',
+                        hintText: '10:00 AM',
                       ),
                     ),
                   ],
                 ),
-              ),
-              SizedBox(height: 16.h),
+                SizedBox(height: 24.h),
 
-              if (!isBreak) ...[
-                // Subject Field
-                _buildTextField(
-                  controller: subjectController,
-                  label: 'Subject',
-                  hintText: 'Enter subject name',
-                ),
-                SizedBox(height: 16.h),
+                // Action Buttons
+                Row(
+                  children: [
+                    // Delete Button
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          controller.deleteTimeSlot(timeSlot.id);
+                          Get.back();
+                        },
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.red,
+                          padding: EdgeInsets.symmetric(vertical: 12.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                          side: BorderSide(color: Colors.red),
+                        ),
+                        child: Text('Delete'),
+                      ),
+                    ),
+                    SizedBox(width: 12.w),
 
-                // Teacher Field
-                _buildTextField(
-                  controller: teacherController,
-                  label: 'Teacher',
-                  hintText: 'Enter teacher name',
+                    // Save Button
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () {
+                          final updatedSlot = timeSlot.copyWith(
+                            startTime: startTimeController.text.trim(),
+                            endTime: endTimeController.text.trim(),
+                            subject: isBreak ? '' : subjectController.text.trim(),
+                            teacher: isBreak ? '' : teacherController.text.trim(),
+                            isBreak: isBreak,
+                            breakTitle: isBreak
+                                ? breakTitleController.text.trim()
+                                : null,
+                          );
+
+                          controller.updateTimeSlot(timeSlot.id, updatedSlot);
+                          Get.back();
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.darkBlue,
+                          padding: EdgeInsets.symmetric(vertical: 12.h),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12.r),
+                          ),
+                        ),
+                        child: Text(
+                          'Save',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(height: 16.h),
-              ] else ...[
-                // Break Title Field
-                _buildTextField(
-                  controller: breakTitleController,
-                  label: 'Break Title',
-                  hintText: 'e.g., Lunch Break, Short Break',
-                ),
-                SizedBox(height: 16.h),
               ],
-
-              // Time Fields in Row
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildTextField(
-                      controller: startTimeController,
-                      label: 'Start Time',
-                      hintText: '09:00 AM',
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-                  Expanded(
-                    child: _buildTextField(
-                      controller: endTimeController,
-                      label: 'End Time',
-                      hintText: '10:00 AM',
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 24.h),
-
-              // Action Buttons
-              Row(
-                children: [
-                  // Delete Button
-                  Expanded(
-                    child: OutlinedButton(
-                      onPressed: () {
-                        controller.deleteTimeSlot(timeSlot.id);
-                        Get.back();
-                      },
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.red,
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                        side: BorderSide(color: Colors.red),
-                      ),
-                      child: Text('Delete'),
-                    ),
-                  ),
-                  SizedBox(width: 12.w),
-
-                  // Save Button
-                  Expanded(
-                    child: ElevatedButton(
-                      onPressed: () {
-                        final updatedSlot = timeSlot.copyWith(
-                          startTime: startTimeController.text.trim(),
-                          endTime: endTimeController.text.trim(),
-                          subject: isBreak ? '' : subjectController.text.trim(),
-                          teacher: isBreak ? '' : teacherController.text.trim(),
-                          isBreak: isBreak,
-                          breakTitle: isBreak
-                              ? breakTitleController.text.trim()
-                              : null,
-                        );
-
-                        controller.updateTimeSlot(timeSlot.id, updatedSlot);
-                        Get.back();
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.darkBlue,
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                      ),
-                      child: Text(
-                        'Save',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+            ),
           ),
         ),
       ),

@@ -173,6 +173,25 @@ class StaffController extends GetxController {
   }
 
   // ---------------------------------------------------------------------------
+  // UPDATE OWN PROFILE (WITHOUT GLOBAL LOADING STATE)
+  // ---------------------------------------------------------------------------
+  Future<void> updateStaffProfile(
+    String uid,
+    String firstName,
+    String lastName,
+  ) async {
+    try {
+      await _staffServices.updateStaffName(uid, firstName, lastName);
+
+      // Update local currentStaff without triggering isLoading
+      final updatedStaff = await _staffServices.getCurrentStaff();
+      currentStaff.value = updatedStaff;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  // ---------------------------------------------------------------------------
   // DELETE STAFF ACCOUNT (SELF DELETE) — AUTH + FIRESTORE
   // ---------------------------------------------------------------------------
   Future<bool> deleteOwnAccount({required String password}) async {

@@ -94,6 +94,7 @@ class GuestPage extends GetView<AnnouncementsController> {
         children: [
           // Day and Date in Row
           Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
                 '$dayName,',
@@ -101,15 +102,20 @@ class GuestPage extends GetView<AnnouncementsController> {
                   fontSize: 18.sp,
                   fontWeight: FontWeight.w700,
                   color: Color(0xFF2D3748),
+                  height: 1,
                 ),
               ),
               SizedBox(width: 5.w),
-              Text(
-                dateStr,
-                style: TextStyle(
-                  fontSize: 15.sp,
-                  fontWeight: FontWeight.w400,
-                  color: Color(0xFF718096),
+              Padding(
+                padding: EdgeInsets.only(bottom: 1.h),
+                child: Text(
+                  dateStr,
+                  style: TextStyle(
+                    fontSize: 15.sp,
+                    fontWeight: FontWeight.w400,
+                    color: Color(0xFF718096),
+                    height: 1,
+                  ),
                 ),
               ),
             ],
@@ -344,7 +350,7 @@ class GuestPage extends GetView<AnnouncementsController> {
       children: [
         Expanded(
           child: _buildPreviewCard(
-            'Expert Faculty',
+            'Expert\nFaculty',
             'assets/icons/teacher1.png',
             AppColors.lightBlue, // Icon background color
           ),
@@ -370,50 +376,59 @@ class GuestPage extends GetView<AnnouncementsController> {
   }
 
   Widget _buildPreviewCard(String title, String imagePath, Color iconBgColor) {
-    return Container(
-      height: 150, // Increased height ✔
-      padding: EdgeInsets.all(8.w),
-      decoration: BoxDecoration(
-        color: Colors.white, // No color on card ✔
-        borderRadius: BorderRadius.circular(20.r),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.08),
-            blurRadius: 10,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          // BIGGER Icon with rounded colored background ✔
-          Container(
-            width: 120,
-            height: 80,
-            decoration: BoxDecoration(
-              color: iconBgColor, // Icon background color ✔
-              borderRadius: BorderRadius.circular(23),
-            ),
-            padding: EdgeInsets.all(22),
-            child: Image.asset(imagePath, fit: BoxFit.contain),
-          ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Calculate responsive sizes based on available width
+        final cardWidth = constraints.maxWidth;
+        final iconContainerHeight = cardWidth * 0.7;
+        final iconPadding = cardWidth * 0.18;
 
-          SizedBox(height: 10.h),
-
-          // Text under icon with black color ✔
-          Text(
-            title,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w600,
-              color: Colors.black, // Black text ✔
-            ),
-            maxLines: 2,
+        return Container(
+          padding: EdgeInsets.all(8.w),
+          decoration: BoxDecoration(
+            color: Colors.white, // No color on card ✔
+            borderRadius: BorderRadius.circular(20.r),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.08),
+                blurRadius: 10,
+                offset: Offset(0, 4),
+              ),
+            ],
           ),
-        ],
-      ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // BIGGER Icon with rounded colored background ✔
+              Container(
+                width: double.infinity,
+                height: iconContainerHeight,
+                decoration: BoxDecoration(
+                  color: iconBgColor, // Icon background color ✔
+                  borderRadius: BorderRadius.circular(18.r),
+                ),
+                padding: EdgeInsets.all(iconPadding),
+                child: Image.asset(imagePath, fit: BoxFit.contain),
+              ),
+
+              SizedBox(height: 8.h),
+
+              // Text under icon with black color ✔
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 12.sp,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.black, // Black text ✔
+                ),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
