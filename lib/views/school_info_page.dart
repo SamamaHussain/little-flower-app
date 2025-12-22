@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:little_flower_app/controllers/school_info_controller.dart';
 import 'package:little_flower_app/utils/colors.dart';
+import 'package:little_flower_app/utils/snackbar_utils.dart';
 
 class EditSchoolInfoScreen extends GetView<SchoolInfoController> {
   const EditSchoolInfoScreen({Key? key}) : super(key: key);
@@ -36,6 +37,7 @@ class EditSchoolInfoScreen extends GetView<SchoolInfoController> {
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: Column(
                     children: [
+                      SizedBox(height: 10.h),
                       // Info Card
                       _buildInfoCard(),
                       SizedBox(height: 20.h),
@@ -163,7 +165,7 @@ class EditSchoolInfoScreen extends GetView<SchoolInfoController> {
           Container(
             padding: EdgeInsets.all(16.w),
             decoration: BoxDecoration(
-              color: AppColors.lightBlue,
+              color: Color(0xFF06D6A0).withOpacity(0.7),
               borderRadius: BorderRadius.circular(16.r),
             ),
             child: Icon(Icons.school_rounded, size: 28.w, color: Colors.white),
@@ -294,14 +296,7 @@ class EditSchoolInfoScreen extends GetView<SchoolInfoController> {
         // Label with icon
         Row(
           children: [
-            Container(
-              padding: EdgeInsets.all(6.w),
-              decoration: BoxDecoration(
-                color: iconColor.withOpacity(0.2),
-                borderRadius: BorderRadius.circular(8.r),
-              ),
-              child: Icon(icon, size: 16.w, color: iconColor),
-            ),
+            Icon(icon, size: 20.w, color: iconColor),
             SizedBox(width: 8.w),
             Text(
               label,
@@ -442,13 +437,7 @@ class EditSchoolInfoScreen extends GetView<SchoolInfoController> {
         controller.contactPhoneController.text.isEmpty ||
         controller.contactEmailController.text.isEmpty ||
         controller.schoolAddressController.text.isEmpty) {
-      Get.snackbar(
-        'Validation Error',
-        'Please fill in all fields',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error('Please fill in all fields');
       return;
     }
 
@@ -456,13 +445,7 @@ class EditSchoolInfoScreen extends GetView<SchoolInfoController> {
     final email = controller.contactEmailController.text;
     final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
     if (!emailRegex.hasMatch(email)) {
-      Get.snackbar(
-        'Validation Error',
-        'Please enter a valid email address',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error('Please enter a valid email address');
       return;
     }
 

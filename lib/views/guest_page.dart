@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:little_flower_app/controllers/announcement_controller.dart';
+import 'package:little_flower_app/controllers/connectivity_controller.dart';
 import 'package:little_flower_app/controllers/school_info_controller.dart';
 import 'package:little_flower_app/controllers/weather_controller.dart';
 import 'package:little_flower_app/routes/app_pages.dart';
@@ -10,53 +11,146 @@ import 'package:little_flower_app/utils/colors.dart';
 class GuestPage extends GetView<AnnouncementsController> {
   @override
   Widget build(BuildContext context) {
+    final ConnectivityController connectivityController =
+        Get.find<ConnectivityController>();
+
     return Scaffold(
       backgroundColor: Color(0xFFF8F9FA),
       body: SafeArea(
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Custom Top Section (same as dashboard)
-              _buildCustomTopBar(),
+        child: Obx(() {
+          // Check for internet connection first
+          if (!connectivityController.isConnected.value) {
+            return _buildNoConnectionState(connectivityController);
+          }
 
-              Padding(
-                padding: EdgeInsets.all(16.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // School Profile Section (similar to user profile in dashboard)
-                    _buildSchoolProfileSection(),
-                    SizedBox(height: 24.h),
+          return SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Custom Top Section (same as dashboard)
+                _buildCustomTopBar(),
 
-                    // Quick Stats (similar to overview cards)
-                    _buildQuickPreview(),
-                    SizedBox(height: 24.h),
+                Padding(
+                  padding: EdgeInsets.all(16.w),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // School Profile Section (similar to user profile in dashboard)
+                      _buildSchoolProfileSection(),
+                      SizedBox(height: 24.h),
 
-                    _buildTimetableSection(),
-                    SizedBox(height: 24.h),
+                      // Quick Stats (similar to overview cards)
+                      _buildQuickPreview(),
+                      SizedBox(height: 24.h),
 
-                    // Live Announcements (same style as dashboard)
-                    _buildLiveAnnouncements(),
-                    SizedBox(height: 24.h),
+                      _buildTimetableSection(),
+                      SizedBox(height: 24.h),
 
-                    // School Information (similar to management tiles)
-                    Text(
-                      'School Information',
-                      style: TextStyle(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w700,
-                        color: Color(0xFF2D3748),
+                      // Live Announcements (same style as dashboard)
+                      _buildLiveAnnouncements(),
+                      SizedBox(height: 24.h),
+
+                      // School Information (similar to management tiles)
+                      Text(
+                        'School Information',
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF2D3748),
+                        ),
                       ),
+                      SizedBox(height: 16.h),
+                      _buildSchoolInfoTiles(),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  Widget _buildNoConnectionState(
+    ConnectivityController connectivityController,
+  ) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(32.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // No connection icon
+            Image.asset(
+              'assets/icons/disconnected.png',
+              width: 100.w,
+              height: 100.h,
+              fit: BoxFit.contain,
+            ),
+            SizedBox(height: 24.h),
+
+            // Title
+            Text(
+              'No Internet Connection',
+              style: TextStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF2D3748),
+              ),
+            ),
+            SizedBox(height: 12.h),
+
+            // Subtitle
+            Text(
+              'Please check your internet connection and try again.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: Color(0xFF718096),
+                height: 1.5,
+              ),
+            ),
+            SizedBox(height: 32.h),
+
+            // Retry button
+            Obx(
+              () => SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: connectivityController.isChecking.value
+                      ? null
+                      : () => connectivityController.retry(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.darkBlue,
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14.r),
                     ),
-                    SizedBox(height: 16.h),
-                    _buildSchoolInfoTiles(),
-                  ],
+                    elevation: 0,
+                  ),
+                  child: connectivityController.isChecking.value
+                      ? SizedBox(
+                          width: 20.w,
+                          height: 20.w,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : Text(
+                          'Try Again',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -779,7 +873,8 @@ class GuestPage extends GetView<AnnouncementsController> {
   }
 
   Widget _buildSchoolInfoTiles() {
-    final SchoolInfoController schoolInfoController = Get.find<SchoolInfoController>();
+    final SchoolInfoController schoolInfoController =
+        Get.find<SchoolInfoController>();
 
     return Obx(() {
       final infoItems = [
@@ -797,7 +892,8 @@ class GuestPage extends GetView<AnnouncementsController> {
         ),
         SchoolInfoItem(
           title: 'Contact Information',
-          subtitle: '${schoolInfoController.contactPhone.value}\n${schoolInfoController.contactEmail.value}',
+          subtitle:
+              '${schoolInfoController.contactPhone.value}\n${schoolInfoController.contactEmail.value}',
           imagePath: 'assets/icons/info/contact-us.png',
           color: AppColors.pink,
         ),

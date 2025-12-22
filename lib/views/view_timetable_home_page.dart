@@ -19,7 +19,7 @@ class ViewTimetableHome extends GetView<TimetableController> {
             // Custom Header
             SizedBox(height: 14.h),
             _buildCustomHeader(),
-            SizedBox(height: 16.h),
+            SizedBox(height: 20.h),
             _buildTimetableStatsCard(),
             SizedBox(height: 16.h),
 

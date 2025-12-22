@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:little_flower_app/routes/app_pages.dart';
+import 'package:little_flower_app/utils/snackbar_utils.dart';
 
 class AuthController extends GetxController {
   static AuthController get instance => Get.find();
@@ -81,11 +82,7 @@ class AuthController extends GetxController {
       print('Current user is ${_auth.currentUser}');
       Get.offAllNamed(Routes.DASHBOARD);
     } on FirebaseAuthException catch (e) {
-      Get.snackbar(
-        'Login Failed',
-        e.message ?? 'An error occurred during login',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      AppSnackbar.error(e.message ?? 'An error occurred during login');
     } finally {
       _isLoading.value = false;
     }

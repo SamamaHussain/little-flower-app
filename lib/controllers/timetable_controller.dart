@@ -1,7 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:little_flower_app/models/timetable_model.dart';
 import 'package:little_flower_app/services/timetable_services.dart';
+import 'package:little_flower_app/utils/snackbar_utils.dart';
 
 class TimetableController extends GetxController {
   final TimetableServices _timetableServices = TimetableServices();
@@ -58,13 +58,7 @@ class TimetableController extends GetxController {
       final timetables = await _timetableServices.getAllClassTimetables();
       classTimetables.assignAll(timetables);
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to load timetables',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error('Failed to load timetables');
     } finally {
       isLoading.value = false;
     }
@@ -95,13 +89,7 @@ class TimetableController extends GetxController {
         );
       }
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to load timetable',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error('Failed to load timetable');
     } finally {
       isLoading.value = false;
     }
@@ -194,24 +182,12 @@ class TimetableController extends GetxController {
         selectedClassTimetable.value!,
       );
 
-      Get.snackbar(
-        'Success',
-        'Timetable saved successfully',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success('Timetable saved successfully');
 
       await fetchAllClassTimetables();
       return true;
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to save timetable: ${e.toString()}',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error('Failed to save timetable');
       return false;
     } finally {
       isSaving.value = false;
@@ -226,24 +202,12 @@ class TimetableController extends GetxController {
       isLoading.value = true;
       await _timetableServices.deleteClassTimetable(timetableId);
 
-      Get.snackbar(
-        'Success',
-        'Timetable deleted successfully',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success('Timetable deleted successfully');
 
       await fetchAllClassTimetables();
       selectedClassTimetable.value = null;
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to delete timetable',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error('Failed to delete timetable');
     } finally {
       isLoading.value = false;
     }

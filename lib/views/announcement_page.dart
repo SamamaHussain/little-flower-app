@@ -25,7 +25,7 @@ class AnnouncementsAdminPage extends GetView<AnnouncementsController> {
                 children: [
                   SizedBox(height: 14.h),
                   _buildCustomHeader(),
-                  SizedBox(height: 30.h),
+                  SizedBox(height: 20.h),
                   // Header Stats
                   _buildHeaderStats(),
                   SizedBox(height: 20.h),

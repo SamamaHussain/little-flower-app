@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:little_flower_app/controllers/staff_controller.dart';
+import 'package:little_flower_app/utils/snackbar_utils.dart';
 
 class SchoolInfoController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -55,13 +56,7 @@ class SchoolInfoController extends GetxController {
         _syncControllersWithObservables();
       }
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to load school information',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error('Failed to load school information');
       print('Error fetching school info: $e');
     } finally {
       isLoading.value = false;
@@ -107,21 +102,9 @@ class SchoolInfoController extends GetxController {
             Get.find<StaffController>().currentStaff.value?.email ?? 'admin',
       }, SetOptions(merge: true));
 
-      Get.snackbar(
-        'Success',
-        'School information updated successfully',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success('School information updated successfully');
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to update school information: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error('Failed to update school information');
       throw e;
     } finally {
       isSaving.value = false;
@@ -214,21 +197,9 @@ class SchoolInfoController extends GetxController {
         newSchoolAddress: schoolAddress.value,
       );
 
-      Get.snackbar(
-        'Reset Complete',
-        'All information reset to defaults',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.blue,
-        colorText: Colors.white,
-      );
+      AppSnackbar.info('All information reset to defaults');
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to reset information: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error('Failed to reset information');
     } finally {
       isSaving.value = false;
     }

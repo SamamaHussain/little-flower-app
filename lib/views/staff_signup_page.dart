@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:little_flower_app/controllers/staff_controller.dart';
 import 'package:little_flower_app/utils/colors.dart';
+import 'package:little_flower_app/utils/snackbar_utils.dart';
 
 class StaffSignUpView extends StatelessWidget {
   final StaffController controller = Get.find<StaffController>();
@@ -23,7 +24,7 @@ class StaffSignUpView extends StatelessWidget {
             children: [
               SizedBox(height: 14.h),
               _buildCustomHeader(),
-              SizedBox(height: 30.h),
+              SizedBox(height: 20.h),
               // Header
               Container(
                 padding: EdgeInsets.all(20.w),
@@ -332,62 +333,27 @@ class StaffSignUpView extends StatelessWidget {
 
   bool _validateForm() {
     if (firstNameController.text.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please enter first name',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        borderRadius: 12.r,
-      );
+      AppSnackbar.error('Please enter first name');
       return false;
     }
 
     if (lastNameController.text.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please enter last name',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        borderRadius: 12.r,
-      );
+      AppSnackbar.error('Please enter last name');
       return false;
     }
 
     if (emailController.text.isEmpty || !emailController.text.contains('@')) {
-      Get.snackbar(
-        'Error',
-        'Please enter valid email address',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        borderRadius: 12.r,
-      );
+      AppSnackbar.error('Please enter valid email address');
       return false;
     }
 
     if (passwordController.text.isEmpty || passwordController.text.length < 6) {
-      Get.snackbar(
-        'Error',
-        'Password must be at least 6 characters',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        borderRadius: 12.r,
-      );
+      AppSnackbar.error('Password must be at least 6 characters');
       return false;
     }
 
     if (passwordController.text != confirmPasswordController.text) {
-      Get.snackbar(
-        'Error',
-        'Passwords do not match',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        borderRadius: 12.r,
-      );
+      AppSnackbar.error('Passwords do not match');
       return false;
     }
 

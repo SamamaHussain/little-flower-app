@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:little_flower_app/models/staff_model.dart';
 import 'package:little_flower_app/services/staff_services.dart';
+import 'package:little_flower_app/utils/snackbar_utils.dart';
 
 class StaffController extends GetxController {
   final StaffServices _staffServices = StaffServices();
@@ -38,7 +39,7 @@ class StaffController extends GetxController {
       final staff = await _staffServices.getAllStaff(excludeUid: currentUid);
       staffList.assignAll(staff);
     } catch (e) {
-      Get.snackbar("Error", "Failed to load staff accounts");
+      AppSnackbar.error("Failed to load staff accounts");
     } finally {
       isLoading.value = false;
     }
@@ -55,7 +56,7 @@ class StaffController extends GetxController {
       currentStaff.value = staff;
       print('From currunt staff func $staff');
     } catch (e) {
-      Get.snackbar("Error", "Failed to load your profile");
+      AppSnackbar.error("Failed to load your profile");
     } finally {
       isLoading.value = false;
     }
@@ -75,7 +76,7 @@ class StaffController extends GetxController {
 
       final exists = await _staffServices.checkEmailExists(email);
       if (exists) {
-        Get.snackbar("Error", "Email already exists");
+        AppSnackbar.error("Email already exists");
         return false;
       }
 
@@ -101,12 +102,7 @@ class StaffController extends GetxController {
       if (Get.isDialogOpen ?? false) Get.back();
 
       // Success
-      Get.snackbar(
-        "Success",
-        "Staff account created successfully",
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success("Staff account created successfully");
 
       // Redirect to auth page
       Get.offAllNamed('/auth');
@@ -114,7 +110,7 @@ class StaffController extends GetxController {
       return true;
     } catch (e) {
       if (Get.isDialogOpen ?? false) Get.back();
-      Get.snackbar("Error", "$e");
+      AppSnackbar.error("$e");
       return false;
     } finally {
       isCreating.value = false;
@@ -129,14 +125,9 @@ class StaffController extends GetxController {
       isSendingResetEmail.value = true;
       await _staffServices.sendPasswordResetEmail(email);
 
-      Get.snackbar(
-        "Success",
-        "Reset link sent",
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success("Reset link sent");
     } catch (e) {
-      Get.snackbar("Error", "$e");
+      AppSnackbar.error("$e");
     } finally {
       isSendingResetEmail.value = false;
     }
@@ -158,14 +149,9 @@ class StaffController extends GetxController {
 
       await fetchStaff();
 
-      Get.snackbar(
-        "Updated",
-        "Staff info updated",
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success("Staff info updated");
     } catch (e) {
-      Get.snackbar("Error", "$e");
+      AppSnackbar.error("$e");
     } finally {
       isUpdating.value = false;
       isLoading.value = false;
@@ -215,19 +201,14 @@ class StaffController extends GetxController {
       // STEP 3 — Delete Firebase Auth user
       await user.delete();
 
-      Get.snackbar(
-        "Deleted",
-        "Your account has been removed permanently",
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success("Your account has been removed permanently");
 
       return true;
     } catch (e) {
       if (e.toString().contains("requires-recent-login")) {
         return false; // UI should ask for password
       }
-      Get.snackbar("Error", "$e");
+      AppSnackbar.error("$e");
       return false;
     } finally {
       isDeleting.value = false;

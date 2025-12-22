@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:little_flower_app/models/students_model.dart';
 import 'package:little_flower_app/services/students_services.dart';
+import 'package:little_flower_app/utils/snackbar_utils.dart';
 
 class StudentsController extends GetxController {
   final RxList<Student> students = <Student>[].obs;
@@ -49,11 +50,7 @@ class StudentsController extends GetxController {
       // Fallback to demo data for development
       students.assignAll(_getDemoStudents());
       applyFilters();
-      Get.snackbar(
-        'Warning',
-        'Using demo data. Check your connection.',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      AppSnackbar.warning('Using demo data. Check your connection.');
     } finally {
       isLoading.value = false;
     }
@@ -118,29 +115,16 @@ class StudentsController extends GetxController {
       );
 
       if (rollNumberExists) {
-        Get.snackbar(
-          'Error',
-          'Roll number ${student.rollNumber} already exists in ${student.grade}-${student.section}',
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        AppSnackbar.error('Roll number ${student.rollNumber} already exists in ${student.grade}-${student.section}');
         return;
       }
 
       await _studentServices.addStudent(student);
       await fetchStudents(); // Refresh the list
-      Get.snackbar(
-        'Success',
-        'Student added successfully',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success('Student added successfully');
     } catch (e) {
       print('Error adding student: $e');
-      Get.snackbar(
-        'Error',
-        'Failed to add student: ${e.toString()}',
-        snackPosition: SnackPosition.BOTTOM,
+      AppSnackbar.error('Failed to add student: ${e.toString()}'
       );
     }
   }
@@ -156,30 +140,16 @@ class StudentsController extends GetxController {
       );
 
       if (rollNumberExists) {
-        Get.snackbar(
-          'Error',
-          'Roll number ${updatedStudent.rollNumber} already exists in ${updatedStudent.grade}-${updatedStudent.section}',
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        AppSnackbar.error('Roll number ${updatedStudent.rollNumber} already exists in ${updatedStudent.grade}-${updatedStudent.section}');
         return;
       }
 
       await _studentServices.updateStudent(studentId, updatedStudent);
       await fetchStudents(); // Refresh the list
-      Get.snackbar(
-        'Success',
-        'Student updated successfully',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success('Student updated successfully');
     } catch (e) {
       print('Error updating student: $e');
-      Get.snackbar(
-        'Error',
-        'Failed to update student: ${e.toString()}',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      AppSnackbar.error('Failed to update student: ${e.toString()}');
     }
   }
 
@@ -195,21 +165,11 @@ class StudentsController extends GetxController {
       await _studentServices.permanentlyDeleteStudent(studentId);
       await fetchStudents(); // Refresh the list
 
-      Get.snackbar(
-        'Success',
-        'Student permanently deleted',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success('Student permanently deleted');
       return true;
     } catch (e) {
       print('Error permanently deleting student: $e');
-      Get.snackbar(
-        'Error',
-        'Failed to delete student: ${e.toString()}',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      AppSnackbar.error('Failed to delete student: ${e.toString()}');
       return false;
     } finally {
       isLoading.value = false;
@@ -249,11 +209,7 @@ class StudentsController extends GetxController {
       final inactiveStudents = students.where((s) => !s.isActive).toList();
 
       if (inactiveStudents.isEmpty) {
-        Get.snackbar(
-          'Info',
-          'No inactive students found',
-          snackPosition: SnackPosition.BOTTOM,
-        );
+        AppSnackbar.info('No inactive students found');
         return;
       }
 
@@ -289,20 +245,10 @@ class StudentsController extends GetxController {
 
       await fetchStudents(); // Refresh the list
 
-      Get.snackbar(
-        'Success',
-        '${inactiveStudents.length} inactive student(s) deleted permanently',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success('${inactiveStudents.length} inactive student(s) deleted permanently');
     } catch (e) {
       print('Error bulk deleting inactive students: $e');
-      Get.snackbar(
-        'Error',
-        'Failed to delete inactive students: ${e.toString()}',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      AppSnackbar.error('Failed to delete inactive students: ${e.toString()}');
     } finally {
       isLoading.value = false;
     }
@@ -312,20 +258,10 @@ class StudentsController extends GetxController {
     try {
       await _studentServices.deactivateStudent(studentId);
       await fetchStudents(); // Refresh the list
-      Get.snackbar(
-        'Success',
-        'Student deactivated successfully',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success('Student deactivated successfully');
     } catch (e) {
       print('Error deleting student: $e');
-      Get.snackbar(
-        'Error',
-        'Failed to deactivate student: ${e.toString()}',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      AppSnackbar.error('Failed to deactivate student: ${e.toString()}');
     }
   }
 
@@ -333,20 +269,10 @@ class StudentsController extends GetxController {
     try {
       await _studentServices.reactivateStudent(studentId);
       await fetchStudents(); // Refresh the list
-      Get.snackbar(
-        'Success',
-        'Student reactivated successfully',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success('Student reactivated successfully');
     } catch (e) {
       print('Error reactivating student: $e');
-      Get.snackbar(
-        'Error',
-        'Failed to reactivate student: ${e.toString()}',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      AppSnackbar.error('Failed to reactivate student: ${e.toString()}');
     }
   }
 

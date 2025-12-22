@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:little_flower_app/controllers/students_controller.dart';
 import 'package:little_flower_app/models/students_model.dart';
 import 'package:little_flower_app/utils/colors.dart';
+import 'package:little_flower_app/utils/snackbar_utils.dart';
 
 class StudentsView extends GetView<StudentsController> {
   final TextEditingController searchController = TextEditingController();
@@ -1040,13 +1041,7 @@ class StudentsView extends GetView<StudentsController> {
                                         final validationError = student
                                             .validate();
                                         if (validationError != null) {
-                                          Get.snackbar(
-                                            'Error',
-                                            validationError,
-                                            snackPosition: SnackPosition.BOTTOM,
-                                            backgroundColor: Colors.red,
-                                            colorText: Colors.white,
-                                          );
+                                          AppSnackbar.error(validationError);
                                           return;
                                         }
 
@@ -1160,35 +1155,17 @@ class StudentsView extends GetView<StudentsController> {
 
   bool _validateForm(String name, String rollNumber, String parentName) {
     if (name.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please enter student name',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error('Please enter student name');
       return false;
     }
 
     if (rollNumber.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please enter roll number',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error('Please enter roll number');
       return false;
     }
 
     if (parentName.isEmpty) {
-      Get.snackbar(
-        'Error',
-        'Please enter parent name',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error('Please enter parent name');
       return false;
     }
 
@@ -1435,13 +1412,7 @@ class StudentsView extends GetView<StudentsController> {
                                         final validationError = updatedStudent
                                             .validate();
                                         if (validationError != null) {
-                                          Get.snackbar(
-                                            'Error',
-                                            validationError,
-                                            snackPosition: SnackPosition.BOTTOM,
-                                            backgroundColor: Colors.red,
-                                            colorText: Colors.white,
-                                          );
+                                          AppSnackbar.error(validationError);
                                           return;
                                         }
 

@@ -1,8 +1,9 @@
-import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:little_flower_app/models/students_model.dart';
 import 'package:little_flower_app/services/attendance_services.dart';
 import 'package:little_flower_app/services/students_services.dart';
+import 'package:little_flower_app/utils/snackbar_utils.dart';
 
 /// Helper to format date as yyyy-MM-dd
 String formatDateOnly(DateTime d) =>
@@ -161,22 +162,10 @@ class AttendanceController extends GetxController {
       isAttendanceMarked.value = true;
       hasUnsavedChanges.value = false;
 
-      Get.snackbar(
-        'Saved',
-        'Attendance saved for $grade - $section on $dateString',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success('Attendance saved for $grade - $section on $dateString');
     } catch (e) {
       debugPrint('Save attendance error: $e');
-      Get.snackbar(
-        'Error',
-        'Failed to save attendance: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error('Failed to save attendance: $e');
     } finally {
       isLoading.value = false;
     }

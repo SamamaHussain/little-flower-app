@@ -1,8 +1,8 @@
 // picture_controller.dart
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:little_flower_app/utils/snackbar_utils.dart';
 
 class PictureController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -44,13 +44,7 @@ class PictureController extends GetxController {
         profilePicUrl.value = '';
       }
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to load profile picture',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error('Failed to load profile picture');
       print('Error fetching profile picture: $e');
       profilePicUrl.value = '';
     } finally {
@@ -81,23 +75,11 @@ class PictureController extends GetxController {
       // Update local observable
       profilePicUrl.value = newImageUrl.trim();
 
-      Get.snackbar(
-        'Success',
-        'Profile picture updated successfully',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success('Profile picture updated successfully');
 
       print('Profile picture updated: ${profilePicUrl.value}');
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to update profile picture: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error('Failed to update profile picture: $e');
       throw e;
     } finally {
       isUpdating.value = false;
@@ -118,21 +100,9 @@ class PictureController extends GetxController {
       // Update local observable
       profilePicUrl.value = '';
 
-      Get.snackbar(
-        'Cleared',
-        'Profile picture removed',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.blue,
-        colorText: Colors.white,
-      );
+      AppSnackbar.info('Profile picture removed');
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        'Failed to clear profile picture: $e',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error('Failed to clear profile picture: $e');
     } finally {
       isUpdating.value = false;
     }

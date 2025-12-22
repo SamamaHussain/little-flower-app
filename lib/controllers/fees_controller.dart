@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:little_flower_app/utils/snackbar_utils.dart';
+
 
 class FeesController extends GetxController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -159,10 +161,10 @@ class FeesController extends GetxController {
       }
 
       _calculateStudentsWithDues();
-      Get.snackbar('Success', 'Fee payment updated successfully');
+      AppSnackbar.success('Fee payment updated successfully');
     } catch (e) {
       print('Error updating fee payment: $e');
-      Get.snackbar('Error', 'Failed to update fee payment');
+      AppSnackbar.error('Failed to update fee payment');
     }
   }
 

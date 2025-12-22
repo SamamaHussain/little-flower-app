@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:little_flower_app/controllers/announcement_controller.dart';
+import 'package:little_flower_app/controllers/connectivity_controller.dart';
 import 'package:little_flower_app/controllers/picture_controller.dart';
 import 'package:little_flower_app/controllers/staff_controller.dart';
 import 'package:little_flower_app/controllers/students_controller.dart';
 import 'package:little_flower_app/controllers/weather_controller.dart';
 import 'package:little_flower_app/routes/app_pages.dart';
 import 'package:little_flower_app/utils/colors.dart';
+import 'package:little_flower_app/utils/snackbar_utils.dart';
 import '../../controllers/auth_controller.dart';
 
 class DashboardPage extends GetView<AuthController> {
@@ -19,11 +21,18 @@ class DashboardPage extends GetView<AuthController> {
         Get.find<AnnouncementsController>();
     final StudentsController studentsController =
         Get.find<StudentsController>();
+    final ConnectivityController connectivityController =
+        Get.find<ConnectivityController>();
 
     return Scaffold(
       backgroundColor: Color(0xFFF8F9FA),
       body: SafeArea(
         child: Obx(() {
+          // Check for internet connection first
+          if (!connectivityController.isConnected.value) {
+            return _buildNoConnectionState(connectivityController);
+          }
+
           // Check if any data is still loading
           final bool isLoading =
               staffController.isLoading.value ||
@@ -97,6 +106,89 @@ class DashboardPage extends GetView<AuthController> {
             style: TextStyle(fontSize: 14.sp, color: Color(0xFF718096)),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildNoConnectionState(
+    ConnectivityController connectivityController,
+  ) {
+    return Center(
+      child: Padding(
+        padding: EdgeInsets.all(32.w),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // No connection icon
+            Image.asset(
+              'assets/icons/disconnected.png',
+              width: 100.w,
+              height: 100.h,
+              fit: BoxFit.contain,
+            ),
+            SizedBox(height: 24.h),
+
+            // Title
+            Text(
+              'No Internet Connection',
+              style: TextStyle(
+                fontSize: 20.sp,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF2D3748),
+              ),
+            ),
+            SizedBox(height: 12.h),
+
+            // Subtitle
+            Text(
+              'Please check your internet connection and try again.',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 14.sp,
+                color: Color(0xFF718096),
+                height: 1.5,
+              ),
+            ),
+            SizedBox(height: 32.h),
+
+            // Retry button
+            Obx(
+              () => Container(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: connectivityController.isChecking.value
+                      ? null
+                      : () => connectivityController.retry(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.darkBlue,
+                    padding: EdgeInsets.symmetric(vertical: 16.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14.r),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: connectivityController.isChecking.value
+                      ? SizedBox(
+                          width: 20.w,
+                          height: 20.w,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: Colors.white,
+                          ),
+                        )
+                      : Text(
+                          'Try Again',
+                          style: TextStyle(
+                            fontSize: 16.sp,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -516,15 +608,39 @@ class DashboardPage extends GetView<AuthController> {
                 height: 80.w,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.grey[200],
+                  gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: [
+                      AppColors.darkBlue.withOpacity(0.7),
+                      AppColors.darkBlue,
+                    ],
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.15),
+                      blurRadius: 12,
+                      offset: Offset(0, 3),
+                      spreadRadius: 1,
+                    ),
+                  ],
                 ),
                 child: Center(
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    color: AppColors.darkBlue,
+                  child: SizedBox(
+                    width: 24.w,
+                    height: 24.w,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2.5,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               );
+            }
+
+            // Show profile image or default
+            if (pictureController.profilePicUrl.value.isEmpty) {
+              return _buildDefaultProfileImage();
             }
 
             return Container(
@@ -532,6 +648,7 @@ class DashboardPage extends GetView<AuthController> {
               height: 80.w,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
+                color: AppColors.darkBlue,
                 boxShadow: [
                   BoxShadow(
                     color: Colors.black.withOpacity(0.15),
@@ -547,42 +664,43 @@ class DashboardPage extends GetView<AuthController> {
                 ],
               ),
               child: ClipOval(
-                child: pictureController.profilePicUrl.value.isNotEmpty
-                    ? Image.network(
-                        pictureController.profilePicUrl.value,
-                        fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Container(
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  AppColors.darkBlue.withOpacity(0.7),
-                                  AppColors.darkBlue,
-                                ],
-                              ),
-                            ),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                value:
-                                    loadingProgress.expectedTotalBytes != null
-                                    ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                    : null,
-                                strokeWidth: 2,
-                                color: Colors.white,
-                              ),
-                            ),
-                          );
-                        },
-                        errorBuilder: (context, error, stackTrace) {
-                          return _buildDefaultProfileImage();
-                        },
-                      )
-                    : _buildDefaultProfileImage(),
+                child: Image.network(
+                  pictureController.profilePicUrl.value,
+                  width: 80.w,
+                  height: 80.w,
+                  fit: BoxFit.cover,
+                  loadingBuilder: (context, child, loadingProgress) {
+                    if (loadingProgress == null) return child;
+                    return Container(
+                      width: 80.w,
+                      height: 80.w,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                          colors: [
+                            AppColors.darkBlue.withOpacity(0.7),
+                            AppColors.darkBlue,
+                          ],
+                        ),
+                      ),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded /
+                                    loadingProgress.expectedTotalBytes!
+                              : null,
+                          strokeWidth: 2,
+                          color: Colors.white,
+                        ),
+                      ),
+                    );
+                  },
+                  errorBuilder: (context, error, stackTrace) {
+                    return _buildDefaultProfileImage();
+                  },
+                ),
               ),
             );
           }),
@@ -1058,25 +1176,11 @@ class DashboardPage extends GetView<AuthController> {
   }
 
   void _showComingSoon(String moduleName) {
-    Get.snackbar(
-      'Coming Soon',
-      '$moduleName module is under development',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.blue[800],
-      colorText: Colors.white,
-      borderRadius: 12.r,
-      margin: EdgeInsets.all(16.w),
-    );
+    AppSnackbar.info('$moduleName module is under development');
   }
 
   void _showNotifications() {
-    Get.snackbar(
-      'Notifications',
-      'No new notifications',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: Colors.grey[800]!,
-      colorText: Colors.white,
-    );
+    AppSnackbar.info('No new notifications');
   }
 }
 

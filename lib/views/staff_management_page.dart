@@ -5,6 +5,7 @@ import 'package:little_flower_app/controllers/staff_controller.dart';
 import 'package:little_flower_app/models/staff_model.dart';
 import 'package:little_flower_app/routes/app_pages.dart';
 import 'package:little_flower_app/utils/colors.dart';
+import 'package:little_flower_app/utils/snackbar_utils.dart';
 
 class StaffManagementView extends StatelessWidget {
   final StaffController controller = Get.put(StaffController());
@@ -25,7 +26,7 @@ class StaffManagementView extends StatelessWidget {
                 children: [
                   SizedBox(height: 14.h),
                   _buildCustomHeader(),
-                  SizedBox(height: 30.h),
+                  SizedBox(height: 20.h),
                   // Header Stats
                   _buildHeaderStats(),
                   SizedBox(height: 20.h),
@@ -467,14 +468,7 @@ class StaffManagementView extends StatelessWidget {
                                 final last = lastNameController.text.trim();
 
                                 if (first.isEmpty || last.isEmpty) {
-                                  Get.snackbar(
-                                    "Error",
-                                    "Both fields are required",
-                                    snackPosition: SnackPosition.BOTTOM,
-                                    backgroundColor: Colors.orange,
-                                    colorText: Colors.white,
-                                    borderRadius: 12.r,
-                                  );
+                                  AppSnackbar.error("Both fields are required");
                                   return;
                                 }
 

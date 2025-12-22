@@ -5,6 +5,7 @@ import 'package:little_flower_app/controllers/auth_controller.dart';
 import 'package:little_flower_app/controllers/picture_controller.dart';
 import 'package:little_flower_app/controllers/staff_controller.dart';
 import 'package:little_flower_app/utils/colors.dart';
+import 'package:little_flower_app/utils/snackbar_utils.dart';
 import 'package:intl/intl.dart';
 
 class ProfilePage extends GetView<AuthController> {
@@ -47,9 +48,9 @@ class ProfilePage extends GetView<AuthController> {
 
                 // Format account creation date
                 final createdDate = staff.createdAt;
-                final formattedDate = createdDate != null
-                    ? DateFormat('MMMM dd, yyyy').format(createdDate)
-                    : 'N/A';
+                final formattedDate = DateFormat(
+                  'MMMM dd, yyyy',
+                ).format(createdDate);
 
                 return SingleChildScrollView(
                   physics: BouncingScrollPhysics(),
@@ -334,26 +335,6 @@ class ProfilePage extends GetView<AuthController> {
     );
   }
 
-  Widget _buildLoadingState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          CircularProgressIndicator(color: AppColors.darkBlue, strokeWidth: 2),
-          SizedBox(height: 20.h),
-          Text(
-            'Loading Profile...',
-            style: TextStyle(
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
-              color: Color(0xFF2D3748),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildEmptyState() {
     return Center(
       child: Column(
@@ -405,9 +386,7 @@ class ProfilePage extends GetView<AuthController> {
     return Obx(() {
       // If user is NOT admin, always show default image
       if (!controller.isAdmin) {
-        return Center(
-          child: _buildDefaultProfilePicture(),
-        );
+        return Center(child: _buildDefaultProfilePicture());
       }
 
       // If user IS admin, show loading/Firestore image
@@ -468,7 +447,7 @@ class ProfilePage extends GetView<AuthController> {
                           child: CircularProgressIndicator(
                             value: loadingProgress.expectedTotalBytes != null
                                 ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
+                                      loadingProgress.expectedTotalBytes!
                                 : null,
                             strokeWidth: 2,
                             color: Colors.white,
@@ -521,11 +500,7 @@ class ProfilePage extends GetView<AuthController> {
           colors: [AppColors.darkBlue, AppColors.darkBlue],
         ),
       ),
-      child: Icon(
-        Icons.person_rounded,
-        color: Colors.white,
-        size: 50.w,
-      ),
+      child: Icon(Icons.person_rounded, color: Colors.white, size: 50.w),
     );
   }
 
@@ -671,12 +646,7 @@ class ProfilePage extends GetView<AuthController> {
     final lastName = lastNameController.text.trim();
 
     if (firstName.isEmpty || lastName.isEmpty) {
-      Get.snackbar(
-        "Error",
-        "First name and last name cannot be empty",
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error("First name and last name cannot be empty");
       return;
     }
 
@@ -710,34 +680,17 @@ class ProfilePage extends GetView<AuthController> {
 
       isEditing.value = false;
 
-      Get.snackbar(
-        "Success",
-        "Profile updated successfully",
-        backgroundColor: AppColors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success("Profile updated successfully");
     } catch (e) {
       // Close dialog on error
       if (Get.isDialogOpen ?? false) Get.back();
 
-      Get.snackbar(
-        "Error",
-        "Failed to update profile",
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      AppSnackbar.error("Failed to update profile");
     }
   }
 
   void _showChangePasswordDialog() {
-    Get.snackbar(
-      'Change Password',
-      'Password reset link will be sent to your email',
-      snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: AppColors.darkBlue,
-      colorText: Colors.white,
-      duration: Duration(seconds: 3),
-    );
+    AppSnackbar.info("Password reset link will be sent to your email");
   }
 
   void _showDeleteAccountDialog(StaffController staffController) {
@@ -832,12 +785,7 @@ class ProfilePage extends GetView<AuthController> {
                     child: ElevatedButton(
                       onPressed: () async {
                         if (passwordController.text.trim().isEmpty) {
-                          Get.snackbar(
-                            "Error",
-                            "Please enter your password",
-                            backgroundColor: Colors.red,
-                            colorText: Colors.white,
-                          );
+                          AppSnackbar.error("Please enter your password");
                           return;
                         }
 

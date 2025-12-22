@@ -29,7 +29,7 @@ class AttendanceHomeView extends StatelessWidget {
                 children: [
                   SizedBox(height: 14),
                   _buildCustomHeader(),
-                  SizedBox(height: 30.h),
+                  SizedBox(height: 20.h),
                   Text(
                     'Select Class',
                     style: TextStyle(

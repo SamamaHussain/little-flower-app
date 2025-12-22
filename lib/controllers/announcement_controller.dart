@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:little_flower_app/utils/snackbar_utils.dart';
 import '../models/announcement_model.dart';
 
 class AnnouncementsController extends GetxController {
@@ -72,20 +73,10 @@ class AnnouncementsController extends GetxController {
       await fetchAnnouncements();
       isLoading = false.obs;
       // Get.back(); // Close dialog
-      Get.snackbar(
-        'Success',
-        'Announcement created successfully',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success('Announcement created successfully');
     } catch (e) {
       print('Error creating announcement: $e');
-      Get.snackbar(
-        'Error',
-        'Failed to create announcement',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      AppSnackbar.error('Failed to create announcement');
     }
   }
 
@@ -119,20 +110,10 @@ class AnnouncementsController extends GetxController {
       }
       isLoading = false.obs;
       // Get.back();
-      Get.snackbar(
-        'Success',
-        'Announcement updated successfully',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success('Announcement updated successfully');
     } catch (e) {
       print('Error updating announcement: $e');
-      Get.snackbar(
-        'Error',
-        'Failed to update announcement',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      AppSnackbar.error('Failed to update announcement');
     }
   }
 
@@ -146,21 +127,11 @@ class AnnouncementsController extends GetxController {
         (announcement) => announcement.id == announcementId,
       );
 
-      Get.snackbar(
-        'Success',
-        'Announcement deleted successfully',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-      );
+      AppSnackbar.success('Announcement deleted successfully');
       isLoading = false.obs;
     } catch (e) {
       print('Error deleting announcement: $e');
-      Get.snackbar(
-        'Error',
-        'Failed to delete announcement',
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      AppSnackbar.error('Failed to delete announcement');
     }
   }
 

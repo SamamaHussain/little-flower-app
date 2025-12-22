@@ -30,7 +30,7 @@ class EditTimetableScreen extends GetView<TimetableController> {
             SizedBox(height: 14.h),
             // Custom Header
             _buildCustomHeader(),
-            SizedBox(height: 16.h),
+            SizedBox(height: 20.h),
 
             // Day Selector Card
             Container(
@@ -775,8 +775,12 @@ class EditTimetableScreen extends GetView<TimetableController> {
                           final updatedSlot = timeSlot.copyWith(
                             startTime: startTimeController.text.trim(),
                             endTime: endTimeController.text.trim(),
-                            subject: isBreak ? '' : subjectController.text.trim(),
-                            teacher: isBreak ? '' : teacherController.text.trim(),
+                            subject: isBreak
+                                ? ''
+                                : subjectController.text.trim(),
+                            teacher: isBreak
+                                ? ''
+                                : teacherController.text.trim(),
                             isBreak: isBreak,
                             breakTitle: isBreak
                                 ? breakTitleController.text.trim()

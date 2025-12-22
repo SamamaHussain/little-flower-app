@@ -19,7 +19,7 @@ class TimetableManagement extends GetView<TimetableController> {
             SizedBox(height: 14.h),
             // Custom Header
             _buildCustomHeader(),
-            SizedBox(height: 16.h),
+            SizedBox(height: 20.h),
             _buildTimetableCreateCard(),
             SizedBox(height: 16.h),
 
