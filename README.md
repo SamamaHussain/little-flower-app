@@ -1,4 +1,4 @@
-# 🌸 The Little Flower – School Management System
+# 🌸 The Little Flower – School Management Application
 
 A comprehensive Flutter-based school management application designed to digitize and streamline academic and administrative operations. **The Little Flower** enables schools to efficiently manage students, staff, attendance, timetables, announcements, and academic records through a secure, role-based system. Built with Firebase and GetX, the app ensures real-time updates, scalability, and smooth performance across devices.
 
